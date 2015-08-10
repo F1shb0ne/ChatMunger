@@ -29,35 +29,45 @@ public class Vocabulary {
 			if (word == null)
 				break;
 			else
-				AddWord(word);
+				AddWord(word, false);
 		}
 				
 	}
 	
-	public boolean AddWord(String word) {
+	public boolean AddWord(String word, boolean Checking) {
 		boolean result = false;
-		int length;		
-		
+		int length;
+
 		length = word.length();
-		// Insert into dictionary, organized by word length.
-		if (Dictionary.containsKey(length)) {
-			(Dictionary.get(length)).add(word);
-		} else {
-			Dictionary.put(length, new ArrayList<String>());
-			(Dictionary.get(length)).add(word);				
+
+		if (Checking) {
+			if (WordExists(word))
+				return false;
 		}
+
+		// Insert into dictionary, organized by word length.
+		if (!Dictionary.containsKey(length))
+			Dictionary.put(length, new ArrayList<String>());
+
+		(Dictionary.get(length)).add(word);
+		result = true;
 
 		return result;
 	}
 	
 	public boolean WordExists(String word) {
+		int length = word.length();
 
-		for (String element: Dictionary.get(word.length())) {
-			if (element.equals(word)) {
-				return true;
+		if (Dictionary.containsKey(length)) {
+			for (String element: Dictionary.get(word.length())) {
+				if (element.equals(word)) {
+					return true;
+				}
 			}
+		} else {
+			return false;
 		}
-		
+
 		return false;
 	}
 	
