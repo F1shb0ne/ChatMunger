@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
-import ca.vire.ChatMunger.WordlistLoader;
+import ca.vire.ChatMunger.WordlistManager;
 import java.io.IOException;
 
 
@@ -14,11 +14,11 @@ public class Vocabulary {
 	
 	public Vocabulary(String filename) {
 
-		WordlistLoader w = null;
+		WordlistManager w = null;
 		String word;
 
 		try {
-			w = new WordlistLoader(filename);
+			w = new WordlistManager(filename);
 		} catch (IOException e) {			
 			System.out.println("Couldnt open word list file.");
 		}
