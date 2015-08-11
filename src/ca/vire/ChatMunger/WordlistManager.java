@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 
 
-public class WordlistLoader {
+public class WordlistManager {
 	
 	private String WordlistFile = null;
 	private BufferedReader Reader = null;
 	private int WordCount = 0;
 
-	public WordlistLoader(String Filename) throws IOException {
+	public WordlistManager(String Filename) throws IOException {
 		WordlistFile = Filename;
 		
 		try {
