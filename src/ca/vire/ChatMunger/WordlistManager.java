@@ -2,33 +2,56 @@ package ca.vire.ChatMunger;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 
 public class WordlistManager {
 	
-	private String WordlistFile = null;
-	private BufferedReader Reader = null;
-	private int WordCount = 0;
+	public static boolean WriteWordlist(Map<Integer, ArrayList<String>> dict, String WordlistFile) {
+		int i;
 
-	public WordlistManager(String Filename) throws IOException {
-		WordlistFile = Filename;
+		BufferedWriter Writer = null;
+		
+		try {
+			Writer = new BufferedWriter(new FileWriter(WordlistFile));
+
+			if (Writer != null) {
+				for (int key: dict.keySet()) {
+					for (i = 0; i < dict.get(key).size(); ++i) {
+						Writer.write(dict.get(key).get(i) + "\n");
+					}
+				}
+			}
+
+			Writer.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("Wordlist file not found.");
+			return false;
+		} catch (IOException e) {
+			System.out.println("Problems writing to wordlist:");
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	public static Map<Integer, ArrayList<String>> ReadWordlist(String WordlistFile) {
+		Map<Integer, ArrayList<String>> dict = new HashMap<Integer, ArrayList<String>>();
+		BufferedReader Reader = null;
+		String input, word;
+		int length;
 		
 		try {
 			Reader = new BufferedReader(new FileReader(WordlistFile));
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			throw new IOException();
-		}
-	}
 
-	public String GetNextWord() {
-		
-		String input = null, word = null;
-		
-		try {
 			while (true) {
 				// Read in the next word (skipping empty lines)
 				input = Reader.readLine();
@@ -37,25 +60,32 @@ public class WordlistManager {
 				if (input == null) {
 					break;
 				} else {
-					if (input.length() > 0) {
+					length = input.length();
+					if (length > 0) {
 						// Found word
-						++WordCount;
 						word = input;
-						break;
+
+						// Insert into dictionary, organized by word length.
+						if (!dict.containsKey(length))
+							dict.put(length, new ArrayList<String>());
+
+						(dict.get(length)).add(word);
 					}
 				}
 			}
+
+			Reader.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("Could not open " + WordlistFile + " for reading.");
+			return null;
 		} catch (IOException e) {
-			// This should cover any strange read errors that might happen.			
+			System.out.println("There was a problem reading from " + WordlistFile);
 			e.printStackTrace();
+			return null;
 		}
 		
-		// Return the word, or null if at EOF.
-		return word;
-	}
-	
-	public int GetWordCount() {
-		return WordCount;
+		return dict;
 	}
 	
 }

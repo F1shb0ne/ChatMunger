@@ -10,40 +10,24 @@ import java.io.IOException;
 
 public class Vocabulary {
 
-	private Map<Integer, ArrayList<String>> Dictionary = new HashMap<Integer, ArrayList<String>>();	
+	private Map<Integer, ArrayList<String>> Dictionary;
+	private String Language, DictionaryFile, AssociationFile;
 	
-	public Vocabulary(String filename) {
-
-		WordlistManager w = null;
-		String word;
-
-		try {
-			w = new WordlistManager(filename);
-		} catch (IOException e) {			
-			System.out.println("Couldnt open word list file.");
-		}
-		
-		// Load all available words
-		while (true) {
-			word = w.GetNextWord();
-			if (word == null)
-				break;
-			else
-				AddWord(word, false);
-		}
-				
+	public Vocabulary(String langauge) {
+		Language = langauge;
+		String DictionaryFile = Language + "-dict.txt";
+		String AssociationFile = Language + "-assoc.txt";
+		Dictionary = WordlistManager.ReadWordlist(DictionaryFile);
 	}
 	
-	public boolean AddWord(String word, boolean Checking) {
+	public boolean AddWord(String word) {
 		boolean result = false;
 		int length;
 
 		length = word.length();
 
-		if (Checking) {
-			if (WordExists(word))
-				return false;
-		}
+		if (WordExists(word))
+			return false;
 
 		// Insert into dictionary, organized by word length.
 		if (!Dictionary.containsKey(length))
