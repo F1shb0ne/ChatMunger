@@ -38,7 +38,7 @@ public class Vocabulary {
 		if (!Dictionary.containsKey(length))
 			Dictionary.put(length, new ArrayList<String>());
 
-		(Dictionary.get(length)).add(word);
+		(Dictionary.get(length)).add(word.toLowerCase());
 		result = true;
 
 		return result;
@@ -46,9 +46,11 @@ public class Vocabulary {
 
 	public boolean DelWord(String word) {
 		ArrayList<String> removal = new ArrayList<String>();
+		String word_lc = word.toLowerCase();
 
-		removal.add(word);
-		if (!WordExists(word))
+
+		removal.add(word_lc);
+		if (!WordExists(word_lc))
 			return false;
 		else {
 			Dictionary.get(word.length()).removeAll(removal);
@@ -58,17 +60,19 @@ public class Vocabulary {
 	}
 
 	public boolean AddWordmap(String OriginalWord, String NewWord) {
-		if (Wordmap.containsKey(OriginalWord))
+		if (Wordmap.containsKey(OriginalWord.toLowerCase()))
 			return false;
 		else
-			Wordmap.put(OriginalWord, NewWord);
+			Wordmap.put(OriginalWord.toLowerCase(), NewWord.toLowerCase());
 
 		return true;
 	}
 
 	public boolean DelWordmap(String OriginalWord) {
-		if (Wordmap.containsKey(OriginalWord))
-			Wordmap.remove(OriginalWord);
+		String OriginalWord_lc = OriginalWord.toLowerCase();
+
+		if (Wordmap.containsKey(OriginalWord_lc))
+			Wordmap.remove(OriginalWord_lc);
 		else
 			return false;
 
@@ -76,11 +80,12 @@ public class Vocabulary {
 	}
 
 	public boolean WordExists(String word) {
-		int length = word.length();
+		String word_lc = word.toLowerCase();
+		int length = word_lc.length();
 
 		if (Dictionary.containsKey(length)) {
-			for (String element: Dictionary.get(word.length())) {
-				if (element.equals(word)) {
+			for (String element: Dictionary.get(length)) {
+				if (element.equals(word_lc)) {
 					return true;
 				}
 			}
