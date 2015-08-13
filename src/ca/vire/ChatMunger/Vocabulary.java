@@ -11,6 +11,7 @@ import java.io.IOException;
 public class Vocabulary {
 
 	private Map<Integer, ArrayList<String>> Dictionary;
+	private Map<String, String> Wordmap;
 	private String Language, DictionaryFile, WordMapFile;
 	
 	public Vocabulary(String langauge) {
@@ -18,6 +19,7 @@ public class Vocabulary {
 		DictionaryFile = Language + "-dict.txt";
 		WordMapFile = Language + "-wordmap.txt";
 		Dictionary = WordlistManager.ReadWordlist(DictionaryFile);
+		Wordmap = WordlistManager.ReadWordmap(WordMapFile);
 	}
 	
 	public boolean SaveToDisk() {
