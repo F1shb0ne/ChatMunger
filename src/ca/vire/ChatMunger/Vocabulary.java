@@ -79,6 +79,13 @@ public class Vocabulary {
 		return true;
 	}
 
+	public boolean MappedWordExists(String word) {
+		if (Wordmap.containsKey(word.toLowerCase()))
+			return true;
+
+		return false;
+	}
+
 	public boolean WordExists(String word) {
 		String word_lc = word.toLowerCase();
 		int length = word_lc.length();
