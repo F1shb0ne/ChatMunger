@@ -12,12 +12,60 @@ import java.util.HashMap;
 
 
 public class WordlistManager {
-	
+
+	public static Map<String, String> ReadWordmap(String WordmapFile) {
+		Map<String, String> wordmap = new HashMap<String, String>();
+		String input, word;
+		int length;
+
+		BufferedReader Reader = null;
+
+		try {
+			Reader = new BufferedReader(new FileReader(WordmapFile));
+
+			while (true) {
+				// Read in the next word (skipping empty lines)
+				input = Reader.readLine();
+
+				// read input until EOF (get null) is reached
+				if (input == null) {
+					break;
+				} else {
+					length = input.length();
+					if (length > 0) {
+						// Found word
+						word = input;
+
+						// Insert into dictionary, organized by word length.
+						if (!dict.containsKey(length))
+							dict.put(length, new ArrayList<String>());
+
+						(dict.get(length)).add(word);
+					}
+				}
+			}
+
+			Reader.close();
+
+
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return wordmap;
+	}
+
+
 	public static boolean WriteWordlist(Map<Integer, ArrayList<String>> dict, String WordlistFile) {
 		int i;
 
 		BufferedWriter Writer = null;
-		
+
 		try {
 			Writer = new BufferedWriter(new FileWriter(WordlistFile));
 
@@ -48,14 +96,14 @@ public class WordlistManager {
 		BufferedReader Reader = null;
 		String input, word;
 		int length;
-		
+
 		try {
 			Reader = new BufferedReader(new FileReader(WordlistFile));
 
 			while (true) {
 				// Read in the next word (skipping empty lines)
 				input = Reader.readLine();
-				
+
 				// read input until EOF (get null) is reached
 				if (input == null) {
 					break;
@@ -84,8 +132,8 @@ public class WordlistManager {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		return dict;
 	}
-	
+
 }
