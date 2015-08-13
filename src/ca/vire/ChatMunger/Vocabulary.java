@@ -124,4 +124,13 @@ public class Vocabulary {
 		return result;
 	}
 
+	public String GetMappedWord(String word) {
+		String result = null;
+
+		if (Wordmap.containsKey(word))
+			result = Wordmap.get(word);
+
+		return result;
+	}
+
 }
