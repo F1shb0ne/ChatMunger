@@ -16,6 +16,7 @@ public class WordlistManager {
 	public static Map<String, String> ReadWordmap(String WordmapFile) {
 		Map<String, String> wordmap = new HashMap<String, String>();
 		String input, word;
+		String[] tokens;
 		int length;
 
 		BufferedReader Reader = null;
@@ -32,22 +33,19 @@ public class WordlistManager {
 					break;
 				} else {
 					length = input.length();
-					if (length > 0) {
-						// Found word
-						word = input;
-
-						// Insert into dictionary, organized by word length.
-						if (!dict.containsKey(length))
-							dict.put(length, new ArrayList<String>());
-
-						(dict.get(length)).add(word);
+					// A word map can't be fewer than 3 characters
+					if (length >= 3) {
+						tokens = input.split(" ");
+						if (tokens[0] != null && tokens[1] != null) {
+							// Insert word association into word map.
+							wordmap.put(tokens[0], tokens[1]);
+							System.out.println("Adding  " + tokens[0] + ":" + tokens[1]);
+						}
 					}
 				}
 			}
 
 			Reader.close();
-
-
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
