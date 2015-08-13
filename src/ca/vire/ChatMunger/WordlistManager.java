@@ -15,7 +15,7 @@ public class WordlistManager {
 
 	public static Map<String, String> ReadWordmap(String WordmapFile) {
 		Map<String, String> wordmap = new HashMap<String, String>();
-		String input, word;
+		String input;
 		String[] tokens;
 		int length;
 
@@ -39,7 +39,6 @@ public class WordlistManager {
 						if (tokens[0] != null && tokens[1] != null) {
 							// Insert word association into word map.
 							wordmap.put(tokens[0], tokens[1]);
-							System.out.println("Adding  " + tokens[0] + ":" + tokens[1]);
 						}
 					}
 				}
@@ -58,6 +57,34 @@ public class WordlistManager {
 		return wordmap;
 	}
 
+	public static boolean WriteWordmap(Map<String, String> wordmap, String WordmapFile) {
+
+		BufferedWriter Writer = null;
+
+		try {
+			Writer = new BufferedWriter(new FileWriter(WordmapFile));
+
+			for (String key: wordmap.keySet()) {
+				Writer.write(key + " " + wordmap.get(key) + "\n");
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		try {
+			Writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
 
 	public static boolean WriteWordlist(Map<Integer, ArrayList<String>> dict, String WordlistFile) {
 		int i;
