@@ -139,8 +139,8 @@ public class Vocabulary {
 	public String GetMappedWord(String word) {
 		String result = null;
 
-		if (Wordmap.containsKey(word))
-			result = Wordmap.get(word);
+		if (Wordmap.containsKey(word.toLowerCase()))
+			result = Wordmap.get(word.toLowerCase());
 
 		return result;
 	}

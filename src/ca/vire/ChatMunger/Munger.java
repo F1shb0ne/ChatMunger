@@ -10,12 +10,11 @@ public class Munger {
 		String result = "";
 		String word = "";
 		String msg_lc = msg.toLowerCase();
-		boolean mask[] = GetCaseMask(msg);
 
 		// Go through the string and piece together words from sequential letters
-		for (char c: msg_lc.toCharArray()) {
+		for (char c: msg.toCharArray()) {
 			++index;
-			if ((int)c >= 97 && (int)c <= 122) {
+			if (((int)c >= 97 && (int)c <= 122) || ((int)c >= 65 && (int)c <= 91)) {
 				// We have a letter; build the word.
 				word += c;
 
@@ -43,6 +42,7 @@ public class Munger {
 
 	private static String ExchangeWord(Vocabulary v, String word) {
 		String result = "";
+		boolean capitalize = isCapitalized(word);
 
 		if (v.MappedWordExists(word)) {
 			result = result + v.GetMappedWord(word);
@@ -50,10 +50,34 @@ public class Munger {
 			result = result + v.GetRandomWord(word.length());
 		}
 
+		if (capitalize)
+			result = Capitalize(result);
 		return result;
 	}
 
-	public static boolean[] GetCaseMask(String msg) {
+	private static boolean isCapitalized(String word) {
+		if (word.charAt(0) >= 65 && word.charAt(0) <= 91)
+			return true;
+		return false;
+	}
+
+	private static String Capitalize(String word) {
+		String result = "";
+		int index = 0;
+
+		for (char c: word.toCharArray()) {
+			if (index == 0) {
+				result += c;
+				result = result.toUpperCase();
+			} else {
+				result += c;
+			}
+			++index;
+		}
+		return result;
+	}
+
+	private static boolean[] GetCaseMask(String msg) {
 		boolean mask[] = new boolean[msg.length()];
 		int index = 0;
 
@@ -66,6 +90,20 @@ public class Munger {
 			++index;
 		}
 		return mask;
+	}
+
+	private static String AdjustCase(String msg, boolean mask[]) {
+		String result = "";
+		int index = 0;
+
+		for (char c: msg.toUpperCase().toCharArray()) {
+			if (!mask[index])
+				c = (char)((int)c | 32);
+			result += c;
+			++index;
+		}
+
+		return result;
 	}
 
 }
