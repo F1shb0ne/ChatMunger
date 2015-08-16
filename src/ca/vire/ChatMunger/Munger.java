@@ -9,7 +9,6 @@ public class Munger {
 		int index = 0;
 		String result = "";
 		String word = "";
-		String msg_lc = msg.toLowerCase();
 
 		// Go through the string and piece together words from sequential letters
 		for (char c: msg.toCharArray()) {
@@ -43,6 +42,10 @@ public class Munger {
 	private static String ExchangeWord(Vocabulary v, String word) {
 		String result = "";
 		boolean capitalize = isCapitalized(word);
+		boolean AllCaps = false;
+
+		 if (word.length() > 1)
+			 AllCaps = isAllCaps(word);
 
 		if (v.MappedWordExists(word)) {
 			result = result + v.GetMappedWord(word);
@@ -50,8 +53,11 @@ public class Munger {
 			result = result + v.GetRandomWord(word.length());
 		}
 
+		if (AllCaps)
+			result = result.toUpperCase();
 		if (capitalize)
 			result = Capitalize(result);
+
 		return result;
 	}
 
@@ -75,6 +81,14 @@ public class Munger {
 			++index;
 		}
 		return result;
+	}
+
+	private static boolean isAllCaps(String word) {
+		for (char c: word.toCharArray()) {
+			if (c >= 97 && c <= 122)
+				return false;
+		}
+		return true;
 	}
 
 	private static boolean[] GetCaseMask(String msg) {
