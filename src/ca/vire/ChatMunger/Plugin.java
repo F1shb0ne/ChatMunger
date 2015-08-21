@@ -2,11 +2,13 @@ package ca.vire.ChatMunger;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Plugin extends JavaPlugin {
     
     Settings LocalSettings;
+    PlayerListener LocalPlayerListener;
     
     @Override
     public void onEnable() {
@@ -14,6 +16,11 @@ public final class Plugin extends JavaPlugin {
 
         // Load configuration.
         LocalSettings = ConfigLoader.LoadConfig(this);
+
+        LocalPlayerListener = new PlayerListener(this);
+
+        // Register player listener handler
+        this.getServer().getPluginManager().registerEvents(LocalPlayerListener, this);
     }
 
     @Override
@@ -22,21 +29,16 @@ public final class Plugin extends JavaPlugin {
     }
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("greeting")) {
-            if (sender.getName().contentEquals("CONSOLE")) {
-                // getLogger().info("Hi Console");
-                sender.getServer().broadcastMessage("Hi Console!");
-            } else
-            {
-                sender.getServer().broadcastMessage("Hi " + sender.getName());
-            }
-            
-            return true;
-        }
         
         if (cmd.getName().equalsIgnoreCase("speak"))
         {
-            sender.sendMessage("Player sent /speak command");
+            for (Player p: sender.getServer().getOnlinePlayers()) {
+                if (p.getName().contentEquals(sender.getName())) {
+                    p.sendMessage("You used the /speak command");
+                } else {
+                    p.sendMessage(sender.getName() + " used the /speak command");
+                }
+            }
             
             return true;
         }
