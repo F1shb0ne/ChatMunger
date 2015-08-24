@@ -4,12 +4,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.ChatColor;
 
 public final class Plugin extends JavaPlugin {
-    
+
     Settings LocalSettings;
     PlayerListener LocalPlayerListener;
-    
+
     @Override
     public void onEnable() {
         getLogger().info("Starting up.");
@@ -21,28 +22,62 @@ public final class Plugin extends JavaPlugin {
 
         // Register player listener handler
         this.getServer().getPluginManager().registerEvents(LocalPlayerListener, this);
+
+
     }
 
     @Override
     public void onDisable() {
         getLogger().info("Shutting down.");
     }
-    
+
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        
-        if (cmd.getName().equalsIgnoreCase("speak"))
+
+        String message = "";
+
+    if (cmd.getName().equalsIgnoreCase("speak"))
         {
-            for (Player p: sender.getServer().getOnlinePlayers()) {
-                if (p.getName().contentEquals(sender.getName())) {
-                    p.sendMessage("You used the /speak command");
-                } else {
-                    p.sendMessage(sender.getName() + " used the /speak command");
-                }
-            }
-            
+        // assemble the message being sent as a single string
+        for (String s: args)
+        message += s + " ";
+
+        Commands.Speak(this, sender, message);
+
             return true;
         }
-        
+
+    if (cmd.getName().equalsIgnoreCase("lang"))
+        {
+    if (args.length == 1) {
+    Commands.Lang(this, sender, args[1]);
+    } else {
+    sender.sendMessage(ChatColor.DARK_RED + "Usage: /lang <language>");
+    }
+
+    return true;
+        }
+
+    if (cmd.getName().equalsIgnoreCase("teachlang"))
+        {
+    if (args.length == 2) {
+    Commands.TeachLang(this, sender, args[1], args[2]);
+    } else {
+    sender.sendMessage(ChatColor.DARK_RED + "Usage: /teachlang <player> <language>");
+    }
+    return true;
+        }
+
+    if (cmd.getName().equalsIgnoreCase("acceptlang"))
+        {
+    if (args.length == 0) {
+    Commands.AcceptLang(this, sender);
+    } else {
+    sender.sendMessage(ChatColor.DARK_RED + "Usage: /acceptlang");
+    }
+
+    return true;
+        }
+
         return false;
     }
 
