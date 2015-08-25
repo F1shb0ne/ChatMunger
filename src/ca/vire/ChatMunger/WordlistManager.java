@@ -105,10 +105,9 @@ public class WordlistManager {
             Writer.close();
 
         } catch (FileNotFoundException e) {
-            System.out.println("Wordlist file not found.");
+            e.printStackTrace();
             return false;
         } catch (IOException e) {
-            System.out.println("Problems writing to wordlist:");
             e.printStackTrace();
             return false;
         }
@@ -150,10 +149,9 @@ public class WordlistManager {
             Reader.close();
 
         } catch (FileNotFoundException e) {
-            System.out.println("Could not open " + WordlistFile + " for reading.");
+            e.printStackTrace();
             return null;
         } catch (IOException e) {
-            System.out.println("There was a problem reading from " + WordlistFile);
             e.printStackTrace();
             return null;
         }

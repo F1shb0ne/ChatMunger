@@ -3,19 +3,17 @@ package ca.vire.ChatMunger;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Collections;
-import ca.vire.ChatMunger.WordlistManager;
 
 
 public class Vocabulary {
 
     private Map<Integer, ArrayList<String>> Dictionary;
     private Map<String, String> Wordmap;
-    private String Language, DictionaryFile, WordmapFile;
+    private String DictionaryFile, WordmapFile;
 
-    public Vocabulary(String langauge) {
-        Language = langauge;
-        DictionaryFile = Language + "-dict.txt";
-        WordmapFile = Language + "-wordmap.txt";
+    public Vocabulary(String language_url) {
+        DictionaryFile = language_url + "/words.txt";
+        WordmapFile = language_url + "/dictionary.txt";
         Dictionary = WordlistManager.ReadWordlist(DictionaryFile);
         Wordmap = WordlistManager.ReadWordmap(WordmapFile);
     }
