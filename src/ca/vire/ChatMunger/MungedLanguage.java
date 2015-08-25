@@ -28,4 +28,11 @@ public class MungedLanguage {
     public int GetSkillPercentage() {
         return (int)(((double)CurrentSkillPoints / (double)RequiredSkillPoints) * 100.0);
     }
+
+    public boolean IsFluent() {
+        if (GetSkillPercentage() == 100)
+            return true;
+        else
+            return false;
+    }
 }

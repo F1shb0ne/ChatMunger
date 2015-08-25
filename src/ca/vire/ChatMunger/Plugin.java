@@ -23,6 +23,8 @@ public final class Plugin extends JavaPlugin {
         // Load languages
         LanguageTree = LanguageManager.LoadLanguageTree(this);
 
+        // Instantiate PlayerManager object
+
         LocalPlayerListener = new PlayerListener(this);
         // Register player listener handler
         this.getServer().getPluginManager().registerEvents(LocalPlayerListener, this);
@@ -45,9 +47,12 @@ public final class Plugin extends JavaPlugin {
             // remove any surrounding whitespace
             message = message.trim();
 
-            Commands.Speak(this, sender, message);
+            if (sender.getName().contentEquals("CONSOLE"))
+                this.getLogger().info("Only players may use this!");
+            else
+                Commands.Speak(this, sender, message);
 
-                return true;
+            return true;
         }
 
         if (cmd.getName().equalsIgnoreCase("lang")) {

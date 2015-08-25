@@ -8,6 +8,23 @@ public class Commands {
     public static void Speak(JavaPlugin plugin, CommandSender sender, String message) {
         String player = sender.getName();
 
+        /*
+        determine which language the player is currently using
+
+        have the text munged into a new string
+
+        iterate through each player on the server
+
+            if player has chat bypass permission || is Op?
+                pass unmunged msg to player
+            else if player knows language speaker is using
+                pass unmunged message to that player
+            else
+                pass the munged message to that player
+
+        pass unmunged message to console
+        */
+
         plugin.getLogger().info(player + " has spoken \"" + message + "\"");
     }
 

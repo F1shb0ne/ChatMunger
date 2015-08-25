@@ -1,23 +1,17 @@
 package ca.vire.ChatMunger;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /*
  * This object represents everything the plugin needs to know about
  * the player as an individual.
  */
 public class MungerPlayer {
-    private String PlayerName;
-    private Map<String, MungedLanguage> LangKnowledge;
+    // Mapping between a language name and skill point data for that player
+    private HashMap<String, MungedLanguage> LangKnowledge;
 
     public MungerPlayer(String name) {
-        PlayerName = name;
         LangKnowledge = new HashMap<String, MungedLanguage>();
-    }
-    
-    public String GetPlayer() {
-        return PlayerName;
     }
     
     // Return number of languages the player has had any teaching in
@@ -36,4 +30,13 @@ public class MungerPlayer {
         return num;
     }
     
+    public boolean IsFluentIn(String language) {
+        boolean result = false;
+
+        if (LangKnowledge.containsKey(language))
+            if (LangKnowledge.get(language).IsFluent())
+                result = true;
+
+        return result;
+    }
 }
