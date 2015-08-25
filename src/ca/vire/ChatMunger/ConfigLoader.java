@@ -13,7 +13,6 @@ public class ConfigLoader {
     public static Settings LoadConfig(JavaPlugin plugin) {
 
         Settings settings = new Settings();
-        //String DataFolder = plugin.getDataFolder().getAbsolutePath();
         String DataFolder = plugin.getDataFolder().toString();
 
         // First determine if plugin data folder exists
@@ -25,7 +24,6 @@ public class ConfigLoader {
             else
                 plugin.getLogger().info("The plugin is NOT enabled.");
 
-            plugin.getLogger().info("Working inside of " + DataFolder);
         } else {
             CreateSkeletonDataFolder(plugin);
         }
