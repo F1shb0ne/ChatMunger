@@ -48,8 +48,9 @@ public final class Plugin extends JavaPlugin {
         }
 
         if (cmd.getName().equalsIgnoreCase("lang")) {
+
             if (args.length == 1) {
-                Commands.Lang(this, sender, args[1]);
+                Commands.Lang(this, sender, args[0]);
             } else {
                 sender.sendMessage(ChatColor.DARK_RED + "Usage: /lang <language>");
             }
@@ -59,7 +60,7 @@ public final class Plugin extends JavaPlugin {
 
         if (cmd.getName().equalsIgnoreCase("teachlang")) {
             if (args.length == 2) {
-                Commands.TeachLang(this, sender, args[1], args[2]);
+                Commands.TeachLang(this, sender, args[0], args[1]);
             } else {
                 sender.sendMessage(ChatColor.DARK_RED + "Usage: /teachlang <player> <language>");
             }
