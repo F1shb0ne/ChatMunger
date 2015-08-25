@@ -1,6 +1,5 @@
 package ca.vire.ChatMunger;
 
-import java.util.ArrayList;
 import ca.vire.ChatMunger.Vocabulary;
 
 public class Munger {
@@ -89,35 +88,6 @@ public class Munger {
                 return false;
         }
         return true;
-    }
-
-    private static boolean[] GetCaseMask(String msg) {
-        boolean mask[] = new boolean[msg.length()];
-        int index = 0;
-
-        // Build a boolean bit array for where characters in a string are capitalized
-        for (char c: msg.toCharArray()) {
-            if ((int)c >= 65 && (int)c <= 91)
-                mask[index] = true;
-            else
-                mask[index] = false;
-            ++index;
-        }
-        return mask;
-    }
-
-    private static String AdjustCase(String msg, boolean mask[]) {
-        String result = "";
-        int index = 0;
-
-        for (char c: msg.toUpperCase().toCharArray()) {
-            if (!mask[index])
-                c = (char)((int)c | 32);
-            result += c;
-            ++index;
-        }
-
-        return result;
     }
 
 }
