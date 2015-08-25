@@ -7,19 +7,19 @@ commands:
       description: Munged chat command
       usage: /speak
       permission: ChatMunger.speak
-      permission-message: You are not able to speak munged languages.
+      permission-message: §4You are not able to speak munged languages.
    lang:
       description: Switch to another language
       usage: /lang
       permission: ChatMunger.lang
-      permission-message: You are not able to switch languages.
+      permission-message: §4You are not able to switch languages.
    teachlang:
       description: Munged chat command
       usage: /teachlang
       permission: ChatMunger.teachlang
-      permission-message: You are not able to teach munged languages.
+      permission-message: §4You are not able to teach munged languages.
    acceptlang:
       description: Munged chat command
       usage: /acceptlang
       permission: ChatMunger.acceptlang
-      permission-message: You are not able to accept munged language teachings.
+      permission-message: §4You are not able to accept munged language teachings.
