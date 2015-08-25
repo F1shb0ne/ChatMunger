@@ -17,7 +17,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void playerChat(AsyncPlayerChatEvent event) {
         String PlayerName = event.getPlayer().getName();
-        String PlayerIP = event.getPlayer().getAddress().toString();
         String Message = event.getMessage();
         LocalPlugin.getLogger().info("Player " + PlayerName + " said: " + Message);
     }
