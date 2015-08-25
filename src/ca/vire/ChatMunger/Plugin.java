@@ -4,11 +4,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.ChatColor;
+import java.util.ArrayList;
 
 public final class Plugin extends JavaPlugin {
 
     Settings LocalSettings;
     PlayerListener LocalPlayerListener;
+    ArrayList<String> Languages;
 
     @Override
     public void onEnable() {
@@ -17,12 +19,12 @@ public final class Plugin extends JavaPlugin {
         // Load configuration.
         LocalSettings = ConfigLoader.LoadConfig(this);
 
-        LocalPlayerListener = new PlayerListener(this);
+        // Load languages
+        Languages = LanguageManager.GetLanguageList(this);
 
+        LocalPlayerListener = new PlayerListener(this);
         // Register player listener handler
         this.getServer().getPluginManager().registerEvents(LocalPlayerListener, this);
-
-
     }
 
     @Override
