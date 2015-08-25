@@ -35,47 +35,46 @@ public final class Plugin extends JavaPlugin {
 
         String message = "";
 
-    if (cmd.getName().equalsIgnoreCase("speak"))
-        {
-        // assemble the message being sent as a single string
-        for (String s: args)
-        message += s + " ";
+        if (cmd.getName().equalsIgnoreCase("speak")) {
+            // assemble the message being sent as a single string
+            for (String s: args)
+                message += s + " ";
 
-        Commands.Speak(this, sender, message);
+            // remove any surrounding whitespace
+            message = message.trim();
+
+            Commands.Speak(this, sender, message);
+
+                return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("lang")) {
+            if (args.length == 1) {
+                Commands.Lang(this, sender, args[1]);
+            } else {
+                sender.sendMessage(ChatColor.DARK_RED + "Usage: /lang <language>");
+            }
 
             return true;
         }
 
-    if (cmd.getName().equalsIgnoreCase("lang"))
-        {
-    if (args.length == 1) {
-    Commands.Lang(this, sender, args[1]);
-    } else {
-    sender.sendMessage(ChatColor.DARK_RED + "Usage: /lang <language>");
-    }
-
-    return true;
+        if (cmd.getName().equalsIgnoreCase("teachlang")) {
+            if (args.length == 2) {
+                Commands.TeachLang(this, sender, args[1], args[2]);
+            } else {
+                sender.sendMessage(ChatColor.DARK_RED + "Usage: /teachlang <player> <language>");
+            }
+            return true;
         }
 
-    if (cmd.getName().equalsIgnoreCase("teachlang"))
-        {
-    if (args.length == 2) {
-    Commands.TeachLang(this, sender, args[1], args[2]);
-    } else {
-    sender.sendMessage(ChatColor.DARK_RED + "Usage: /teachlang <player> <language>");
-    }
-    return true;
-        }
+        if (cmd.getName().equalsIgnoreCase("acceptlang")) {
+            if (args.length == 0) {
+                Commands.AcceptLang(this, sender);
+            } else {
+                sender.sendMessage(ChatColor.DARK_RED + "Usage: /acceptlang");
+            }
 
-    if (cmd.getName().equalsIgnoreCase("acceptlang"))
-        {
-    if (args.length == 0) {
-    Commands.AcceptLang(this, sender);
-    } else {
-    sender.sendMessage(ChatColor.DARK_RED + "Usage: /acceptlang");
-    }
-
-    return true;
+            return true;
         }
 
         return false;
