@@ -41,6 +41,7 @@ public class ConfigLoader {
     public static boolean CreateSkeletonDataFolder(JavaPlugin plugin) {
         String PluginRootPath = plugin.getDataFolder().getAbsolutePath();
         File PluginRootFolder = new File(PluginRootPath);
+        File PlayersFolder = new File(PluginRootPath + "/Players");
         File ExampleLangFolder = new File(PluginRootPath + "/ExampleLang");
         File ExampleLangWords = new File(PluginRootPath + "/ExampleLang/words.txt");
         File ExampleLangDictionary = new File(PluginRootPath + "/ExampleLang/dictionary.txt");
@@ -82,6 +83,9 @@ public class ConfigLoader {
         // Create the ChatMunger data folder
         plugin.getLogger().info("Creating data folder skeleton...");
         PluginRootFolder.mkdir();
+
+        // Create the Players folder
+        PlayersFolder.mkdir();
 
         // Copy over the default config
         plugin.saveDefaultConfig();
