@@ -11,7 +11,8 @@ public final class Plugin extends JavaPlugin {
 
     Settings LocalSettings;
     PlayerListener LocalPlayerListener;
-    HashMap<String, Vocabulary> LanguageTree;
+    HashMap<String, Language> LanguageTree;
+    PlayerManager PlayerMgr;
 
     @Override
     public void onEnable() {
@@ -24,6 +25,7 @@ public final class Plugin extends JavaPlugin {
         LanguageTree = LanguageManager.LoadLanguageTree(this);
 
         // Instantiate PlayerManager object
+        PlayerMgr = new PlayerManager(this);
 
         LocalPlayerListener = new PlayerListener(this);
         // Register player listener handler
@@ -33,6 +35,8 @@ public final class Plugin extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("Shutting down.");
+
+        PlayerMgr.SavePlayerData();
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -50,7 +54,7 @@ public final class Plugin extends JavaPlugin {
             if (sender.getName().contentEquals("CONSOLE"))
                 this.getLogger().info("Only players may use this!");
             else
-                Commands.Speak(this, sender, message);
+                Commands.Speak(this, PlayerMgr, LanguageTree, sender, message);
 
             return true;
         }
