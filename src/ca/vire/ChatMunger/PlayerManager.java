@@ -52,8 +52,6 @@ public class PlayerManager {
             PlayerMap.get(player).CurrentLanguage = PlayerData.getString("CurrentLanguage");
             PlayerMap.get(player).LastExchange = PlayerData.getInt("LastExchange");
 
-            plugin.getLogger().info(player + "'s last language exchange was " + new Integer(PlayerData.getInt("LastExchange")).toString() + " seconds ago.");
-
             // Languages player knows
             LangList = PlayerData.getConfigurationSection("Languages").getKeys(false);
             LangCount = LangList.size();
@@ -64,7 +62,7 @@ public class PlayerManager {
                 CurrentSkillPoints = PlayerData.getInt("Languages." + lang + ".CurrentSkillPoints");
                 RequiredSkillPoints = PlayerData.getInt("Languages." + lang + ".RequiredSkillPoints");
 
-                plugin.getLogger().info(player + " has " + new Integer(CurrentSkillPoints).toString() + " points in " + lang);
+                plugin.getLogger().info(player + " has " + new Integer(CurrentSkillPoints).toString() + " of " + new Integer(RequiredSkillPoints).toString() + " points in " + lang);
 
                 PlayerMap.get(player).LangKnowledge.put(lang, new LanguageProperties(CurrentSkillPoints, RequiredSkillPoints));
             }
@@ -93,6 +91,13 @@ public class PlayerManager {
 
             // Assign data elements
             yml.set("CurrentLanguage", PlayerMap.get(player).CurrentLanguage);
+            yml.set("LastExchange", PlayerMap.get(player).LastExchange);
+
+            // Record data for each language the player knows
+            for (String lang: PlayerMap.get(player).LangKnowledge.keySet()) {
+                yml.set("Languages." + lang + ".CurrentSkillPoints", PlayerMap.get(player).LangKnowledge.get(lang).CurrentSkillPoints);
+                yml.set("Languages." + lang + ".RequiredSkillPoints", PlayerMap.get(player).LangKnowledge.get(lang).RequiredSkillPoints);
+            }
 
             // Write the file
             try {
