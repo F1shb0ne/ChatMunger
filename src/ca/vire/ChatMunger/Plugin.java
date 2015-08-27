@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.ChatColor;
+
 import java.util.HashMap;
 
 
@@ -51,6 +52,12 @@ public final class Plugin extends JavaPlugin {
             // remove any surrounding whitespace
             message = message.trim();
 
+            // Bail if the message is empty
+            if (message.length() == 0) {
+                sender.sendMessage(ChatColor.DARK_RED + "Usage: /speak <message>");
+                return true;
+            }
+
             if (sender.getName().contentEquals("CONSOLE"))
                 this.getLogger().info("Only players may use this!");
             else
@@ -62,7 +69,7 @@ public final class Plugin extends JavaPlugin {
         if (cmd.getName().equalsIgnoreCase("lang")) {
 
             if (args.length == 1) {
-                Commands.Lang(this, sender, args[0]);
+                Commands.Lang(this, PlayerMgr, LanguageTree, sender, args[0]);
             } else {
                 sender.sendMessage(ChatColor.DARK_RED + "Usage: /lang <language>");
             }

@@ -59,10 +59,32 @@ public class Commands {
         }
     }
 
-    public static void Lang(JavaPlugin plugin, CommandSender sender, String language) {
+    public static void Lang(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String language) {
+        boolean found = false;
         String player = sender.getName();
+        String SelectedLanguage = "Invalid";
 
-        plugin.getLogger().info(player + " is switching to language " + language);
+        // Find a language match
+        for (String lang: tree.keySet()) {
+            if (lang.equalsIgnoreCase(language.toLowerCase())) {
+                found = true;
+                SelectedLanguage = lang;
+                break;
+            }
+        }
+
+        if (!found) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "Unknown language.");
+            return;
+        }
+
+        // Does the player know this language?
+        if (pMgr.PlayerKnowsLanguage(player, SelectedLanguage)) {
+            pMgr.SetPlayerCurrentLanguage(player, SelectedLanguage);
+            sender.sendMessage("" + ChatColor.YELLOW + "Switched to " + SelectedLanguage);
+        } else {
+            sender.sendMessage("" + ChatColor.DARK_RED + "You are unable to speak " + SelectedLanguage);
+        }
     }
 
     public static void TeachLang(JavaPlugin plugin, CommandSender sender, String player, String language) {

@@ -124,6 +124,11 @@ public class PlayerManager {
         return language;
     }
 
+    // Assumes both player and language exist
+    public void SetPlayerCurrentLanguage(String player, String language) {
+        PlayerMap.get(player).CurrentLanguage = language;
+    }
+
     public boolean PlayerKnowsLanguage(String player, String language) {
 
         // Load / create player data if not already in memory
