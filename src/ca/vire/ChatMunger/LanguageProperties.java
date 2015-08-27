@@ -10,7 +10,7 @@ public class LanguageProperties {
 
     public LanguageProperties(int currentSkillPoints, int requiredSkillPoints) {
         CurrentSkillPoints = currentSkillPoints;
-        RequiredSkillPoints = currentSkillPoints;
+        RequiredSkillPoints = requiredSkillPoints;
     }
     
     // Add or remove a skill point
