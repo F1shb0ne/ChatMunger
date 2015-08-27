@@ -1,12 +1,30 @@
 package ca.vire.ChatMunger;
 
+import java.util.HashMap;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.CommandSender;
 
 public class Commands {
 
-    public static void Speak(JavaPlugin plugin, CommandSender sender, String message) {
+    public static void Speak(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String message) {
         String player = sender.getName();
+        int sp;
+
+        String CurrentLanguage = pMgr.GetPlayerCurrentLanguage(player);
+
+        plugin.getLogger().info(player + " is currently using " + CurrentLanguage);
+
+        if (CurrentLanguage.equals("Common"))
+            if (pMgr.NumLanguagesKnown(player) == 0) {
+                sender.sendMessage(ChatColor.DARK_RED + "You don't know any other languages.");
+            } else {
+                sender.sendMessage(ChatColor.DARK_RED + "You haven't selected a language yet.");
+            }
+
+        else {
+
+        }
 
         /*
         determine which language the player is currently using
@@ -38,6 +56,15 @@ public class Commands {
         String player_teacher = sender.getName();
 
         plugin.getLogger().info(player_teacher + " is issuing a /teachlang request to " + player + " to learn " + language);
+    }
+
+    // Intended for administrators
+    public static void GiveLang(JavaPlugin plugin, CommandSender sender, String player, String language) {
+        String player_teacher = sender.getName();
+
+        plugin.getLogger().info("Giving " + language + " to " + player);
+
+
     }
 
     public static void AcceptLang(JavaPlugin plugin, CommandSender sender) {
