@@ -144,6 +144,62 @@ public class Commands {
             pRef.sendMessage("" + ChatColor.YELLOW + "You now understand the " + SelectedLanguage + " language!");
     }
 
+    public static void LangInfo(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String language) {
+        boolean found = false;
+        String SelectedLanguage = "Invalid";
+        String player = sender.getName();
+        String KnownLanguages = "";
+        Player pRef = null;
+        int SkillPoints = 0;
+        int ReqSkillPoints = 0;
+        String msg;
+
+        // No language specified; general inquiry
+        if (language == null) {
+            // Tell the user about the languages known on the server
+            for (String lang: tree.keySet()) {
+                if (pMgr.PlayerKnowsLanguage(player, lang))
+                    KnownLanguages += "" + ChatColor.BLUE + lang + " ";
+                else
+                    KnownLanguages += "" + ChatColor.DARK_RED + lang + " ";
+            }
+            KnownLanguages = KnownLanguages.trim();
+            sender.sendMessage("Known languages: " + KnownLanguages);
+        } else {
+            // Inform the user about what they know about a specified language
+
+            // Find a language match
+            for (String lang: tree.keySet()) {
+                if (lang.equalsIgnoreCase(language.toLowerCase())) {
+                    found = true;
+                    SelectedLanguage = lang;
+                    break;
+                }
+            }
+
+            if (!found) {
+                sender.sendMessage("" + ChatColor.DARK_RED + "Unknown language.");
+                return;
+            }
+
+            if (pMgr.PlayerKnowsLanguage(player, SelectedLanguage)) {
+                sender.sendMessage("" + ChatColor.GREEN + "You are fluent in this language.");
+            } else {
+                SkillPoints = pMgr.GetLanguageSkillPoints(player, SelectedLanguage);
+                if (SkillPoints == 0) {
+                    sender.sendMessage("" + ChatColor.DARK_RED + "You do not understand this language.");
+                } else {
+                    ReqSkillPoints = pMgr.GetLanguageReqSkillPoints(player, SelectedLanguage);
+                    msg = "" + ChatColor.YELLOW + "You have " + ChatColor.YELLOW + "" + new Integer(SkillPoints).toString();
+                    msg += " of " + new Integer(ReqSkillPoints).toString() + " skill points needed for this language.";
+                    sender.sendMessage(msg);
+                }
+            }
+
+        }
+
+    }
+
     public static void AcceptLang(JavaPlugin plugin, CommandSender sender) {
         String player_student = sender.getName();
 

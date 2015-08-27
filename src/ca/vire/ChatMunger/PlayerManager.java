@@ -172,9 +172,21 @@ public class PlayerManager {
     }
 
     public int GetLanguageSkillPoints(String player, String language) {
-        int a;
+        int SkillPoints = 0;
 
-        return PlayerMap.get(player).LangKnowledge.get(language).CurrentSkillPoints;
+        if (PlayerMap.get(player).LangKnowledge.containsKey(language))
+            SkillPoints = PlayerMap.get(player).LangKnowledge.get(language).CurrentSkillPoints;
+
+        return SkillPoints;
+    }
+
+    public int GetLanguageReqSkillPoints(String player, String language) {
+        int SkillPoints = 0;
+
+        if (PlayerMap.get(player).LangKnowledge.containsKey(language))
+            SkillPoints = PlayerMap.get(player).LangKnowledge.get(language).RequiredSkillPoints;
+
+        return SkillPoints;
     }
 
 }
