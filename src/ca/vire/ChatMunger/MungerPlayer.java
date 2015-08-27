@@ -8,10 +8,13 @@ import java.util.HashMap;
  */
 public class MungerPlayer {
     // Mapping between a language name and skill point data for that player
-    private HashMap<String, MungedLanguage> LangKnowledge;
+    public HashMap<String, LanguageProperties> LangKnowledge;
+    public String CurrentLanguage;
+    public int LastExchange; // Time in seconds since using /teachlang or /acceptlang commands
 
-    public MungerPlayer(String name) {
-        LangKnowledge = new HashMap<String, MungedLanguage>();
+    public MungerPlayer() {
+        LangKnowledge = new HashMap<String, LanguageProperties>();
+        CurrentLanguage = "Common";
     }
     
     // Return number of languages the player has had any teaching in
@@ -38,5 +41,9 @@ public class MungerPlayer {
                 result = true;
 
         return result;
+    }
+
+    public void SetLanguage(String language, LanguageProperties ml) {
+        LangKnowledge.put(language, ml);
     }
 }
