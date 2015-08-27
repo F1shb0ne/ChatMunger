@@ -125,9 +125,12 @@ public class PlayerManager {
     }
 
     public boolean PlayerKnowsLanguage(String player, String language) {
-        boolean result = false;
 
-        return result;
+        // Load / create player data if not already in memory
+        if (!PlayerExists(player))
+            LoadPlayerData(player);
+
+        return PlayerMap.get(player).IsFluentIn(language);
     }
 
     public int NumLanguagesKnown(String player) {
