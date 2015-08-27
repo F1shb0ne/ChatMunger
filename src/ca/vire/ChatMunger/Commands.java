@@ -9,11 +9,9 @@ public class Commands {
 
     public static void Speak(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String message) {
         String player = sender.getName();
-        int sp;
+        String MungedMessage, out;
 
         String CurrentLanguage = pMgr.GetPlayerCurrentLanguage(player);
-
-        plugin.getLogger().info(player + " is currently using " + CurrentLanguage);
 
         if (CurrentLanguage.equals("Common"))
             if (pMgr.NumLanguagesKnown(player) == 0) {
@@ -23,7 +21,15 @@ public class Commands {
             }
 
         else {
+            MungedMessage = Munger.ProcessMessage(tree.get(CurrentLanguage).Vocab, message);
 
+            out = player + ": ";
+            out += "" + ChatColor.WHITE + ChatColor.ITALIC + "[";
+            out += "" + ChatColor.BLUE + ChatColor.ITALIC + CurrentLanguage;
+            out += "" + ChatColor.WHITE + ChatColor.ITALIC + "] ";
+            out += "" + ChatColor.AQUA + MungedMessage;
+
+            sender.sendMessage(out);
         }
 
         /*
@@ -43,7 +49,6 @@ public class Commands {
         pass unmunged message to console
         */
 
-        plugin.getLogger().info(player + " has spoken \"" + message + "\"");
     }
 
     public static void Lang(JavaPlugin plugin, CommandSender sender, String language) {
