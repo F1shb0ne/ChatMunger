@@ -3,12 +3,12 @@ package ca.vire.ChatMunger;
 /*
  * This object represents the attributes of a specific language that belongs to a player
  */
-public class MungedLanguage {
+public class LanguageProperties {
 
     public int CurrentSkillPoints; // Number of skill points the player has gained so far
     public int RequiredSkillPoints; // Number of skill points required to have learned the language
 
-    public MungedLanguage(int currentSkillPoints, int requiredSkillPoints) {
+    public LanguageProperties(int currentSkillPoints, int requiredSkillPoints) {
         CurrentSkillPoints = currentSkillPoints;
         RequiredSkillPoints = currentSkillPoints;
     }
