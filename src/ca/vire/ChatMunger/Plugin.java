@@ -96,6 +96,16 @@ public final class Plugin extends JavaPlugin {
             return true;
         }
 
+        if (cmd.getName().equalsIgnoreCase("givelang")) {
+            if (args.length == 2) {
+                Commands.GiveLang(this, PlayerMgr, LanguageTree, sender, args[0], args[1]);
+            } else {
+                sender.sendMessage(ChatColor.DARK_RED + "Usage: /givelang <player> <language>");
+            }
+
+            return true;
+        }
+
         return false;
     }
 

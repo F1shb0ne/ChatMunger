@@ -94,12 +94,54 @@ public class Commands {
     }
 
     // Intended for administrators
-    public static void GiveLang(JavaPlugin plugin, CommandSender sender, String player, String language) {
-        String player_teacher = sender.getName();
+    public static void GiveLang(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String player, String language) {
+        boolean found = false;
+        String SelectedLanguage = "Invalid";
+        String TargetPlayer = "Invalid";
+        Player pRef = null;
 
-        plugin.getLogger().info("Giving " + language + " to " + player);
+        // Find a language match
+        for (String lang: tree.keySet()) {
+            if (lang.equalsIgnoreCase(language.toLowerCase())) {
+                found = true;
+                SelectedLanguage = lang;
+                break;
+            }
+        }
 
+        if (!found) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "Unknown language.");
+            return;
+        }
 
+        // re-use 'found' for player next
+        found = false;
+
+        // Check if the player is online
+        for (Player p: plugin.getServer().getOnlinePlayers()) {
+            if (p.getName().equalsIgnoreCase(player)) {
+                found = true;
+                TargetPlayer = p.getName();
+                pRef = p;
+                break;
+            }
+        }
+
+        if (!found) {
+            // Player is not online, so lets hope the spelling/case usage was correct
+            TargetPlayer = player;
+        }
+
+        if (sender.getName().contentEquals("CONSOLE"))
+            plugin.getLogger().info("Giving " + TargetPlayer + " " + SelectedLanguage);
+        else
+            sender.sendMessage("" + ChatColor.YELLOW + "Giving " + TargetPlayer + " " + SelectedLanguage);
+
+        pMgr.GivePlayerLanguage(TargetPlayer, SelectedLanguage);
+
+        // Inform the player if they are online
+        if (pRef != null)
+            pRef.sendMessage("" + ChatColor.YELLOW + "You now understand the " + SelectedLanguage + " language!");
     }
 
     public static void AcceptLang(JavaPlugin plugin, CommandSender sender) {

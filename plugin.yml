@@ -14,12 +14,18 @@ commands:
       permission: ChatMunger.lang
       permission-message: §4You are not able to switch languages.
    teachlang:
-      description: Munged chat command
+      description: Lets a player teach another player a language
       usage: /teachlang
       permission: ChatMunger.teachlang
       permission-message: §4You are not able to teach munged languages.
    acceptlang:
-      description: Munged chat command
+      description: Accept a teaching offer from another player
       usage: /acceptlang
       permission: ChatMunger.acceptlang
       permission-message: §4You are not able to accept munged language teachings.
+   givelang:
+      description: Instantly gives a player use of a language
+      usage: /givelang
+      permission: ChatMunger.givelang
+      permission-message: §4You are not allowed to do that.
+

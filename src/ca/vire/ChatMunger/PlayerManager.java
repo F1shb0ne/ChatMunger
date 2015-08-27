@@ -26,8 +26,28 @@ public class PlayerManager {
     }
 
     // Do we have existing data on the player in memory?
-    private boolean PlayerExists(String player) {
+    public boolean PlayerExists(String player) {
         return PlayerMap.containsKey(player);
+    }
+
+    // Assumes the language exists
+    // If the player only partially knows the language, they'll now be fluent.
+    public void GivePlayerLanguage(String player, String language) {
+        int CurrentSkillPoints, RequiredSkillPoints;
+        String LangConfigUrl = plugin.getDataFolder().getAbsolutePath() + "/" + language + "/config.yml";
+        FileConfiguration LanguageData;
+
+        // Load / create player data
+        if (!PlayerExists(player))
+            LoadPlayerData(player);
+
+        // Dig up the language settings from the plugin data folder
+        LanguageData = new YamlConfiguration().loadConfiguration(new File(LangConfigUrl));
+        RequiredSkillPoints = LanguageData.getInt("RequiredSkillPoints");
+        CurrentSkillPoints = RequiredSkillPoints;
+
+        // Grant the player the language
+        PlayerMap.get(player).LangKnowledge.put(language, new LanguageProperties(CurrentSkillPoints, RequiredSkillPoints));
     }
 
     // Loads player language information from plugin data folder
@@ -52,19 +72,22 @@ public class PlayerManager {
             PlayerMap.get(player).CurrentLanguage = PlayerData.getString("CurrentLanguage");
             PlayerMap.get(player).LastExchange = PlayerData.getInt("LastExchange");
 
-            // Languages player knows
-            LangList = PlayerData.getConfigurationSection("Languages").getKeys(false);
-            LangCount = LangList.size();
+            // Check if the player knows any languages at all
+            if (PlayerData.isConfigurationSection("Languages")) {
+                // Languages player knows
+                LangList = PlayerData.getConfigurationSection("Languages").getKeys(false);
+                LangCount = LangList.size();
 
-            plugin.getLogger().info(player + " knows " + new Integer(LangCount).toString() + " languages.");
+                plugin.getLogger().info(player + " knows " + new Integer(LangCount).toString() + " languages.");
 
-            for (String lang: LangList) {
-                CurrentSkillPoints = PlayerData.getInt("Languages." + lang + ".CurrentSkillPoints");
-                RequiredSkillPoints = PlayerData.getInt("Languages." + lang + ".RequiredSkillPoints");
+                for (String lang: LangList) {
+                    CurrentSkillPoints = PlayerData.getInt("Languages." + lang + ".CurrentSkillPoints");
+                    RequiredSkillPoints = PlayerData.getInt("Languages." + lang + ".RequiredSkillPoints");
 
-                plugin.getLogger().info(player + " has " + new Integer(CurrentSkillPoints).toString() + " of " + new Integer(RequiredSkillPoints).toString() + " points in " + lang);
+                    plugin.getLogger().info(player + " has " + new Integer(CurrentSkillPoints).toString() + " of " + new Integer(RequiredSkillPoints).toString() + " points in " + lang);
 
-                PlayerMap.get(player).LangKnowledge.put(lang, new LanguageProperties(CurrentSkillPoints, RequiredSkillPoints));
+                    PlayerMap.get(player).LangKnowledge.put(lang, new LanguageProperties(CurrentSkillPoints, RequiredSkillPoints));
+                }
             }
 
             // Indicate existing data was found to the caller
