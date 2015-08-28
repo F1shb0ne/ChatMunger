@@ -149,7 +149,6 @@ public class Commands {
         String SelectedLanguage = "Invalid";
         String player = sender.getName();
         String KnownLanguages = "";
-        Player pRef = null;
         int SkillPoints = 0;
         int ReqSkillPoints = 0;
         String msg;
