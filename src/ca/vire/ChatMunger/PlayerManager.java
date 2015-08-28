@@ -189,4 +189,70 @@ public class PlayerManager {
         return SkillPoints;
     }
 
+    public boolean SetOfferingPlayer(String ReceivingPlayer, String TeachingPlayer, String Language) {
+        boolean result = false;
+
+        if (PlayerMap.containsKey(ReceivingPlayer)) {
+            PlayerMap.get(ReceivingPlayer).OfferingPlayer = TeachingPlayer;
+            PlayerMap.get(ReceivingPlayer).OfferedLanguage = Language;
+            result = true;
+        }
+
+        return result;
+    }
+
+    public void ClearOfferingPlayer(String ReceivingPlayer) {
+        if (PlayerMap.containsKey(ReceivingPlayer)) {
+            PlayerMap.get(ReceivingPlayer).OfferingPlayer = null;
+        }
+    }
+
+    public String GetOfferingPlayer(String ReceivingPlayer) {
+        String result = null;
+
+        if (PlayerMap.containsKey(ReceivingPlayer)) {
+            result = PlayerMap.get(ReceivingPlayer).OfferingPlayer;
+        }
+
+        return result;
+    }
+
+    public String GetOfferedLanguage(String ReceivingPlayer) {
+        String result = null;
+
+        if (PlayerMap.containsKey(ReceivingPlayer)) {
+            result = PlayerMap.get(ReceivingPlayer).OfferedLanguage;
+        }
+        return result;
+    }
+
+
+    // Returns the time stamp when the player last used /teachlang or /acceptlang
+    public long GetLastExchangeTime(String player) {
+        long result = 0;
+
+        if (PlayerMap.containsKey(player)) {
+            result = PlayerMap.get(player).LastExchange;
+        }
+
+        return result;
+    }
+
+    // sets the LastExchange
+    public void SetLastExchangeTime(String player, long timestamp) {
+        int result = 0;
+
+        if (PlayerMap.containsKey(player)) {
+            PlayerMap.get(player).LastExchange = timestamp;
+        }
+    }
+
+    // Assumes both player and language exist
+    public boolean AddSkillPoint(String player, String language, int point) {
+        boolean result = false;
+
+        PlayerMap.get(player).LangKnowledge.get(language).AddPoint(point);
+
+        return result;
+    }
 }

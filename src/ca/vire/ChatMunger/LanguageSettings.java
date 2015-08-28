@@ -4,9 +4,9 @@ package ca.vire.ChatMunger;
 public class LanguageSettings {
 
     public int RequiredSkillPoints;
-    public int ExchangeCoolDown;
+    public long ExchangeCoolDown;
     
-    LanguageSettings(int requiredpoints, int cooldown) {
+    LanguageSettings(int requiredpoints, long cooldown) {
         RequiredSkillPoints = requiredpoints;
         ExchangeCoolDown = cooldown;
     }

@@ -10,7 +10,9 @@ public class MungerPlayer {
     // Mapping between a language name and skill point data for that player
     public HashMap<String, LanguageProperties> LangKnowledge;
     public String CurrentLanguage;
-    public int LastExchange; // Time in seconds since using /teachlang or /acceptlang commands
+    public long LastExchange; // Time in seconds since using /teachlang or /acceptlang commands
+    public String OfferingPlayer;  // Last person who sent a /teachlang offer
+    public String OfferedLanguage; // And which language was offered
 
     public MungerPlayer() {
         LangKnowledge = new HashMap<String, LanguageProperties>();
@@ -46,4 +48,5 @@ public class MungerPlayer {
     public void SetLanguage(String language, LanguageProperties ml) {
         LangKnowledge.put(language, ml);
     }
+
 }

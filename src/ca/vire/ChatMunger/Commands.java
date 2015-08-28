@@ -8,6 +8,35 @@ import org.bukkit.entity.Player;
 
 public class Commands {
 
+    // Does the language exist in the tree?
+    private static String LanguageExists(HashMap<String, Language> tree, String language) {
+        String result = null;
+
+        for (String lang: tree.keySet()) {
+            if (lang.equalsIgnoreCase(language.toLowerCase())) {
+                result = lang;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    // Is the player currently online?
+    private static String PlayerOnline(JavaPlugin plugin, String player) {
+        String result = null;
+
+        for (Player p: plugin.getServer().getOnlinePlayers()) {
+            if (p.getName().equalsIgnoreCase(player)) {
+                result = p.getName();
+                break;
+            }
+        }
+
+        return result;
+    }
+
+
     public static void Speak(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String message) {
         String player = sender.getName();
         String MungedMessage;
@@ -87,10 +116,48 @@ public class Commands {
         }
     }
 
-    public static void TeachLang(JavaPlugin plugin, CommandSender sender, String player, String language) {
-        String player_teacher = sender.getName();
+    public static void TeachLang(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String player, String language) {
+        String TeachingPlayer = sender.getName();
+        String TargetPlayer;
+        String SelectedLanguage = "Invalid";
+        String Request;
 
-        plugin.getLogger().info(player_teacher + " is issuing a /teachlang request to " + player + " to learn " + language);
+        // Find a language match
+        if ((SelectedLanguage = LanguageExists(tree, language)) == null) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "Unknown language.");
+            return;
+        }
+
+        // Is the teaching player actually able to teach the language?
+        if (!pMgr.PlayerKnowsLanguage(TeachingPlayer, SelectedLanguage)) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "You cant teach a language you dont know!");
+            return;
+        }
+
+        // Find a player match
+        if ((TargetPlayer = PlayerOnline(plugin, player)) == null) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "Player not found.");
+            return;
+        }
+
+        // Does the receiving player already know the language?
+        if (pMgr.PlayerKnowsLanguage(TargetPlayer, SelectedLanguage)) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "That player already knows this language.");
+            return;
+        }
+
+        // Looks good: notify target player of the teaching offer
+        Request = "" + ChatColor.GREEN + TeachingPlayer + ChatColor.WHITE + " is offering you a ";
+        Request += "" + ChatColor.DARK_BLUE + "skill point" + ChatColor.WHITE + " in " + ChatColor.BLUE + SelectedLanguage + ".";
+        plugin.getServer().getPlayer(TargetPlayer).sendMessage(Request);
+        Request = "" + ChatColor.WHITE + "To accept use " + ChatColor.YELLOW + "/acceptlang";
+        plugin.getServer().getPlayer(TargetPlayer).sendMessage(Request);
+
+        // Also inform the commanding player the request was sent.
+        sender.sendMessage("" + ChatColor.YELLOW + "Request sent!");
+
+        // Store who the offering player is in the target player's data object
+        pMgr.SetOfferingPlayer(TargetPlayer, TeachingPlayer, SelectedLanguage);
     }
 
     // Intended for administrators
@@ -199,9 +266,75 @@ public class Commands {
 
     }
 
-    public static void AcceptLang(JavaPlugin plugin, CommandSender sender) {
-        String player_student = sender.getName();
+    public static void AcceptLang(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender) {
+        String ReceivingPlayer = sender.getName();
+        String TeachingPlayer = null;
+        String OfferedLanguage = null;
 
-        plugin.getLogger().info(player_student + " has responded to a /teachlang request");
+        long LastExchangeTeacher = 0;
+        long LastExchangeReceiver = 0;
+        long CurrentTime = (System.currentTimeMillis() / 1000l);
+        long CooldownTime = 0;
+
+        Player pReceiver;
+        Player pTeacher;
+
+        // First check to see if a /teachlang offer was made to the commanding player
+        if ((TeachingPlayer = pMgr.GetOfferingPlayer(ReceivingPlayer)) == null) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "You have not been offered a skill point yet.");
+            return;
+        }
+
+        // Make sure the teaching player is still online
+        if (PlayerOnline(plugin, TeachingPlayer) == null) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "That player is not currently online.");
+            return;
+        }
+
+        // Get the language that was offered
+        OfferedLanguage = pMgr.GetOfferedLanguage(ReceivingPlayer);
+
+        // Determine the last time both players made a skill point exchange
+        LastExchangeTeacher = pMgr.GetLastExchangeTime(TeachingPlayer);
+        LastExchangeReceiver = pMgr.GetLastExchangeTime(ReceivingPlayer);
+
+        // Get the cooldown time for the language
+        CooldownTime = tree.get(OfferedLanguage).Settings.ExchangeCoolDown;
+
+        // Simplify some code...
+        pReceiver = plugin.getServer().getPlayer(ReceivingPlayer);
+        pTeacher = plugin.getServer().getPlayer(TeachingPlayer);
+
+        // Make sure enough time has elapsed for both teacher and student
+        if (LastExchangeReceiver + CooldownTime > CurrentTime) {
+            pReceiver.sendMessage("" + ChatColor.DARK_RED + "It is too soon to receive skill point");
+            pTeacher.sendMessage("" + ChatColor.DARK_RED + "It is too soon for that player to receive skill point");
+            return;
+        }
+        if (LastExchangeTeacher + CooldownTime > CurrentTime) {
+            pReceiver.sendMessage("" + ChatColor.DARK_RED + "It is too soon for that player to teach a skill point");
+            pTeacher.sendMessage("" + ChatColor.DARK_RED + "It is too soon to teach another skill point");
+            return;
+        }
+
+        // Grant the skill point
+        pMgr.AddSkillPoint(ReceivingPlayer, OfferedLanguage, 1);
+
+        // Update the timestamps
+        pMgr.SetLastExchangeTime(TeachingPlayer, CurrentTime);
+        pMgr.SetLastExchangeTime(ReceivingPlayer, CurrentTime);
+
+        // Inform players of the successful exchange
+        if (pMgr.PlayerKnowsLanguage(ReceivingPlayer, OfferedLanguage)) {
+            // Only tell the receiving player he or she has fluency now; they might want to keep that information private
+            pReceiver.sendMessage("" + ChatColor.WHITE + "You now know the " + ChatColor.BLUE + OfferedLanguage + ChatColor.WHITE + " language!");
+        } else {
+            pReceiver.sendMessage("" + ChatColor.WHITE + "You have received a skill point in " + ChatColor.BLUE + OfferedLanguage + ChatColor.WHITE + "!");
+        }
+
+        pTeacher.sendMessage("" + ChatColor.WHITE + "You have taught a skill point in " + ChatColor.BLUE + OfferedLanguage + ChatColor.WHITE + "!");
+
+        // Finally, clear the otffering player
+        pMgr.ClearOfferingPlayer(ReceivingPlayer);
     }
 }
