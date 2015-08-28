@@ -1,5 +1,5 @@
 name: ChatMunger
-version: 1.0.0
+version: 1.0.1
 author: F1shb0ne
 main: ca.vire.ChatMunger.Plugin
 commands:
@@ -33,4 +33,9 @@ commands:
       usage: /langinfo
       permission: ChatMunger.langinfo
       permission-message: §4You are not able to get info on languages.
+   langreload:
+      description: Reloads language files in plugin data folder.
+      usage: /langreload
+      permission: ChatMunger.langreload
+      permission-message: §4You are not allowed to do that.
 
