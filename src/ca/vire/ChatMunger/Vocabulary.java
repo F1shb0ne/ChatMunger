@@ -112,6 +112,10 @@ public class Vocabulary {
         return result;
     }
 
+    public int GetWordmapSize() {
+        return Wordmap.size();
+    }
+
     public String GetRandomWord(int length) {
 
         String result = null;

@@ -15,6 +15,7 @@ public class LanguageManager {
         String path = plugin.getDataFolder().getAbsolutePath();
         String url;
         String langlist = "";
+        String info;
         FileConfiguration yml;
 
         Vocabulary vocab;
@@ -40,11 +41,14 @@ public class LanguageManager {
                     // Insert the language into the tree
                     tree.put(entry, new Language(vocab, settings));
                     langlist += entry + " ";
+
+                    // Give some statistics
+                    info = entry + ": " + new Integer(vocab.GetDictionarySize()) + " words, ";
+                    info += "" + new Integer(vocab.GetWordmapSize()) + " word mappings.";
+                    plugin.getLogger().info(info);
                 }
             }
         }
-
-        plugin.getLogger().info("Languages: " + langlist);
 
         return tree;
     }

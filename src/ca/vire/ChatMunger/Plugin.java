@@ -17,8 +17,6 @@ public final class Plugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Starting up.");
-
         // Load configuration.
         LocalSettings = ConfigLoader.LoadConfig(this);
 
@@ -130,6 +128,18 @@ public final class Plugin extends JavaPlugin {
                 Commands.LangInfo(this, PlayerMgr, LanguageTree, sender, null);
             } else {
                 sender.sendMessage(ChatColor.DARK_RED + "Usage: /langinfo [language]");
+            }
+
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("langreload")) {
+            if (args.length == 0) {
+                // Reload languages
+                LanguageTree = LanguageManager.LoadLanguageTree(this);
+                sender.sendMessage(ChatColor.GREEN + "Language files reloaded.");
+            } else {
+                sender.sendMessage(ChatColor.DARK_RED + "Usage: /langreload");
             }
 
             return true;
