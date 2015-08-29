@@ -57,8 +57,8 @@ public class ConfigLoader {
         ExampleConfigContents += "# Number of skill points required to learn this language\n";
         ExampleConfigContents += "SkillPointsRequired: 8\n";
         ExampleConfigContents += "\n";
-        ExampleConfigContents += "# Minimum amount of time (in hours) that must elapse before another skill may be taught.\n";
-        ExampleConfigContents += "SkillPointCooldown: 24\n";
+        ExampleConfigContents += "# Minimum amount of time (in seconds) that must elapse before another skill may be taught/learned.\n";
+        ExampleConfigContents += "SkillPointCooldown: 86400\n";
 
         ExampleWordsContents += "# Example words file.\n";
         ExampleWordsContents += "# See Documentation.txt for more details at: https://github.com/F1shb0ne/ChatMunger\n";

@@ -121,6 +121,9 @@ public class Commands {
         String TargetPlayer;
         String SelectedLanguage = "Invalid";
         String Request;
+        long CurrentTime = (System.currentTimeMillis() / 1000l);
+        long LastExchange;
+        long CooldownTime;
 
         // Find a language match
         if ((SelectedLanguage = LanguageExists(tree, language)) == null) {
@@ -131,6 +134,14 @@ public class Commands {
         // Is the teaching player actually able to teach the language?
         if (!pMgr.PlayerKnowsLanguage(TeachingPlayer, SelectedLanguage)) {
             sender.sendMessage("" + ChatColor.DARK_RED + "You cant teach a language you dont know!");
+            return;
+        }
+
+        // Get the cooldown time for the language
+        CooldownTime = tree.get(SelectedLanguage).Settings.ExchangeCoolDown;
+        LastExchange = pMgr.GetLastExchangeTime(TeachingPlayer);
+        if (LastExchange + CooldownTime > CurrentTime) {
+            sender.sendMessage("" + ChatColor.DARK_RED + "It is too soon to teach another skill point");
             return;
         }
 
@@ -307,8 +318,8 @@ public class Commands {
 
         // Make sure enough time has elapsed for both teacher and student
         if (LastExchangeReceiver + CooldownTime > CurrentTime) {
-            pReceiver.sendMessage("" + ChatColor.DARK_RED + "It is too soon to receive skill point");
-            pTeacher.sendMessage("" + ChatColor.DARK_RED + "It is too soon for that player to receive skill point");
+            pReceiver.sendMessage("" + ChatColor.DARK_RED + "It is too soon to receive a skill point");
+            pTeacher.sendMessage("" + ChatColor.DARK_RED + "It is too soon for that player to receive a skill point");
             return;
         }
         if (LastExchangeTeacher + CooldownTime > CurrentTime) {

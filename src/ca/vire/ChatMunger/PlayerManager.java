@@ -247,11 +247,19 @@ public class PlayerManager {
         }
     }
 
-    // Assumes both player and language exist
     public boolean AddSkillPoint(String player, String language, int point) {
         boolean result = false;
+        String LangConfigUrl = plugin.getDataFolder().getAbsolutePath() + "/" + language + "/config.yml";
+        FileConfiguration LanguageData = new YamlConfiguration().loadConfiguration(new File(LangConfigUrl));
 
-        PlayerMap.get(player).LangKnowledge.get(language).AddPoint(point);
+        if (PlayerMap.containsKey(player)) {
+            // Initialize language for player if it doesn't already exist
+            if (!PlayerMap.get(player).LangKnowledge.containsKey(language))
+                PlayerMap.get(player).LangKnowledge.put(language, new LanguageProperties(1, LanguageData.getInt("RequiredSkillPoints")));
+            else
+                PlayerMap.get(player).LangKnowledge.get(language).AddPoint(point);
+            result = true;
+        }
 
         return result;
     }
