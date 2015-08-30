@@ -1,1 +1,12 @@
-Nothing here yet.
+[This document is incomplete, more to come]
+
+Configuration help:
+
+Each language has its own settings.
+
+SkillPointsRequired: This is how many skill points a player will need to be able to use this language, the more points needed, the longer it will take the player to learn. 2-4 skill points could be an easy language while 4-8 or more is considered hard.
+
+SkillPointCooldown: How long the player has to wait (in seconds) before he or she can use /teachlang or /acceptlang again.  It is suggested that this be 24 hours (86400 seconds)
+
+
+The most time consuming aspect of the plugin is coming up with a random vocabulary list (words.txt) and word association file (dictionary.txt).  It is recommended having your words.txt at least 300 words in size with careful attention paid to the words 2-6 letters in length as they will be used quite frequently.
