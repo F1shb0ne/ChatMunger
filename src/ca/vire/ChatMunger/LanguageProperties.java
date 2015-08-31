@@ -47,7 +47,7 @@ public class LanguageProperties {
         if (PassiveLearning) {
             CurrentExposures += exposure;
 
-            if (CurrentExposures > RequiredExposures) {
+            if (CurrentExposures >= RequiredExposures) {
                 AddPoint(1);
                 result = true;
                 CurrentExposures = 0;
