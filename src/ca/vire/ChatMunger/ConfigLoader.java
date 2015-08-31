@@ -59,6 +59,12 @@ public class ConfigLoader {
         ExampleConfigContents += "\n";
         ExampleConfigContents += "# Minimum amount of time (in hours) that must elapse before another skill may be taught.\n";
         ExampleConfigContents += "SkillPointCooldown: 24\n";
+        ExampleConfigContents += "\n";
+        ExampleConfigContents += "# Can players gain skill points over time just by 'hearing' others use it?\n";
+        ExampleConfigContents += "PassiveLearning: true\n";
+        ExampleConfigContents += "\n";
+        ExampleConfigContents += "# If so, how many instances of players using /speak be required to advance one skill point?\n";
+        ExampleConfigContents += "PassiveExposuresRequired: 100\n";
 
         ExampleWordsContents += "# Example words file.\n";
         ExampleWordsContents += "# See Documentation.txt for more details at: https://github.com/F1shb0ne/ChatMunger\n";
