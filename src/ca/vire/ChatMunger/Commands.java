@@ -83,6 +83,20 @@ public class Commands {
                 } else {
                     // Otherwise they're clueless to what was said.
                     p.sendMessage(outMunged);
+
+                    // However, check to see if the player can passively learn this language
+                    if (tree.get(CurrentLanguage).Settings.PassiveLearning) {
+                        if (pMgr.AddExposurePoint(p.getName(), CurrentLanguage, 1) == true) {
+                            if (pMgr.PlayerKnowsLanguage(p.getName(), CurrentLanguage)) {
+                                // Check to see if the player knows the language
+                                p.sendMessage("" + ChatColor.WHITE + "You now know the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language!");
+                            } else {
+                                // Otherwise the player has gained a skill point just by listening
+                                p.sendMessage("" + ChatColor.WHITE + "You have gained a skill point in " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + "!");
+                            }
+                        }
+
+                    }
                 }
             }
         }
