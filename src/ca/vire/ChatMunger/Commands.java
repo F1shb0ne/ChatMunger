@@ -227,7 +227,7 @@ public class Commands {
         boolean found = false;
         String SelectedLanguage = "Invalid";
         String player = sender.getName();
-        String KnownLanguages = "";
+        String ServerLanguages = "";
         int SkillPoints = 0;
         int ReqSkillPoints = 0;
         String msg;
@@ -237,12 +237,12 @@ public class Commands {
             // Tell the user about the languages known on the server
             for (String lang: tree.keySet()) {
                 if (pMgr.PlayerKnowsLanguage(player, lang))
-                    KnownLanguages += "" + ChatColor.BLUE + lang + " ";
+                    ServerLanguages += "" + ChatColor.BLUE + lang + " ";
                 else
-                    KnownLanguages += "" + ChatColor.DARK_RED + lang + " ";
+                    ServerLanguages += "" + ChatColor.DARK_RED + lang + " ";
             }
-            KnownLanguages = KnownLanguages.trim();
-            sender.sendMessage("Known languages: " + KnownLanguages);
+            ServerLanguages = ServerLanguages.trim();
+            sender.sendMessage("Server languages: " + ServerLanguages);
         } else {
             // Inform the user about what they know about a specified language
 
