@@ -20,7 +20,12 @@ public class LanguageProperties {
     }
 
     // Add or remove a skill point
-    public void AddPoint(int point) {
+    public boolean AddPoint(int point) {
+        boolean result = false;
+
+        if (CurrentSkillPoints == RequiredSkillPoints)
+            return false;
+
         CurrentSkillPoints += point;
 
         if (CurrentSkillPoints > RequiredSkillPoints)
@@ -28,6 +33,11 @@ public class LanguageProperties {
 
         if (CurrentSkillPoints < 0)
             CurrentSkillPoints = 0;
+
+        if (CurrentSkillPoints == RequiredSkillPoints)
+            result = true;
+
+        return result;
     }
 
     // Return true if exposure resulted in skill point gain
