@@ -41,6 +41,7 @@ public class Commands {
         String player = sender.getName();
         String MungedMessage;
         String header_known, header_unknown, outMunged, outUnmunged;
+        boolean SkillPointGain = false;
 
         String CurrentLanguage = pMgr.GetPlayerCurrentLanguage(player);
 
@@ -83,6 +84,17 @@ public class Commands {
                 } else {
                     // Otherwise they're clueless to what was said.
                     p.sendMessage(outMunged);
+
+                    // However, check to see if this language can be passively learned
+                    if (tree.get(CurrentLanguage).Settings.PassiveLearning) {
+                        SkillPointGain = pMgr.AddExposurePoint(p.getName(), CurrentLanguage, 1);
+
+                        if (SkillPointGain)
+                            p.sendMessage("" + ChatColor.WHITE + "You have gained a skill point in the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language!");
+
+                        if (pMgr.PlayerKnowsLanguage(p.getName(), CurrentLanguage))
+                            p.sendMessage("" + ChatColor.WHITE + "You now know the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language!");
+                    }
                 }
             }
         }
