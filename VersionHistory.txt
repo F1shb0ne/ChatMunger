@@ -3,3 +3,9 @@ Initial release
 
 1.0.1
 Added /langreload
+
+1.1.0
+Added /teachlang & /acceptlang
+
+1.2.0
+Added passive language learning aspect for languages
