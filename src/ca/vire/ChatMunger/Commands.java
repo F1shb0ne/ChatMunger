@@ -41,6 +41,7 @@ public class Commands {
         String player = sender.getName();
         String MungedMessage;
         String header_known, header_unknown, outMunged, outUnmunged;
+        boolean SkillPointGain = false;
 
         String CurrentLanguage = pMgr.GetPlayerCurrentLanguage(player);
 
@@ -84,18 +85,15 @@ public class Commands {
                     // Otherwise they're clueless to what was said.
                     p.sendMessage(outMunged);
 
-                    // However, check to see if the player can passively learn this language
+                    // However, check to see if this language can be passively learned
                     if (tree.get(CurrentLanguage).Settings.PassiveLearning) {
-                        if (pMgr.AddExposurePoint(p.getName(), CurrentLanguage, 1) == true) {
-                            if (pMgr.PlayerKnowsLanguage(p.getName(), CurrentLanguage)) {
-                                // Check to see if the player knows the language
-                                p.sendMessage("" + ChatColor.WHITE + "You now know the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language!");
-                            } else {
-                                // Otherwise the player has gained a skill point just by listening
-                                p.sendMessage("" + ChatColor.WHITE + "You have gained a skill point in " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + "!");
-                            }
-                        }
+                        SkillPointGain = pMgr.AddExposurePoint(p.getName(), CurrentLanguage, 1);
 
+                        if (SkillPointGain)
+                            p.sendMessage("" + ChatColor.WHITE + "You have gained a skill point in the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language!");
+
+                        if (pMgr.PlayerKnowsLanguage(p.getName(), CurrentLanguage))
+                            p.sendMessage("" + ChatColor.WHITE + "You now know the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language!");
                     }
                 }
             }
