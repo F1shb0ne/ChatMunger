@@ -38,6 +38,10 @@ public class PlayerManager {
         String LangConfigUrl = plugin.getDataFolder().getAbsolutePath() + "/" + language + "/config.yml";
         FileConfiguration LanguageData;
 
+        // Load / create player data
+        if (!PlayerExists(player))
+            LoadPlayerData(player);
+
         if (PlayerMap.get(player).LangKnowledge.containsKey(language))
             // Bail if the Player exists and has existing properties about that language
             return false;
@@ -45,12 +49,8 @@ public class PlayerManager {
         // Dig up the language settings from the plugin data folder
         LanguageData = new YamlConfiguration().loadConfiguration(new File(LangConfigUrl));
         RequiredSkillPoints = LanguageData.getInt("RequiredSkillPoints");
-        RequiredExposures = LanguageData.getInt("RequiredExposures");
+        RequiredExposures = LanguageData.getInt("PassiveExposuresRequired");
         PassiveLearning = LanguageData.getBoolean("PassiveLearning");
-
-        // Load / create player data
-        if (!PlayerExists(player))
-            LoadPlayerData(player);
 
         // Start with a clean slate
         CurrentSkillPoints = 0;
@@ -96,8 +96,12 @@ public class PlayerManager {
         int LangCount, LastExchange, CurrentSkillPoints, RequiredSkillPoints, CurrentExposures, RequiredExposures;
         boolean PassiveLearning;
 
-        // Create new player data object in memory
-        PlayerMap.put(player, new MungerPlayer());
+        plugin.getLogger().info("Loading data for player " + player + " from disk...");
+
+        if (!PlayerMap.containsKey(player)) {
+            // Create new player data object in memory
+            PlayerMap.put(player, new MungerPlayer());
+        }
 
         if (PlayerFile.exists()) {
             // Player data exists on disk; load it in
@@ -122,6 +126,7 @@ public class PlayerManager {
                     RequiredExposures = PlayerData.getInt("Languages." + lang + ".RequiredExposures");
                     PassiveLearning = PlayerData.getBoolean("Languages." + lang + ".PassiveLearning");
 
+                    plugin.getLogger().info(player + " has " + new Integer(CurrentExposures).toString() + " of " + new Integer(RequiredExposures).toString() + " exposure points in " + lang);
                     plugin.getLogger().info(player + " has " + new Integer(CurrentSkillPoints).toString() + " of " + new Integer(RequiredSkillPoints).toString() + " points in " + lang);
 
                     PlayerMap.get(player).LangKnowledge.put(lang, new LanguageProperties(CurrentSkillPoints, RequiredSkillPoints, CurrentExposures, RequiredExposures, PassiveLearning));
@@ -133,7 +138,6 @@ public class PlayerManager {
         } else {
             // Set some safe defaults as needed
         }
-
 
         return result;
     }
