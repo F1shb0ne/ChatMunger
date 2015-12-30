@@ -41,6 +41,8 @@ public class Commands {
         String player = sender.getName();
         String MungedMessage;
         String header_known, header_unknown, outMunged, outUnmunged;
+        String SpeakersWorld = sender.getServer().getPlayer(player).getLocation().getWorld().getName();
+        String PlayersWorld;
         boolean SkillPointGain = false;
 
         String CurrentLanguage = pMgr.GetPlayerCurrentLanguage(player);
@@ -68,7 +70,7 @@ public class Commands {
             outMunged = header_unknown + ChatColor.AQUA + MungedMessage;
             outUnmunged = header_known + ChatColor.AQUA + message;
 
-            // Show the player what others who don't know the language will see
+            // Show the speaking player what the others who don't know the language will see
             sender.sendMessage(outMunged);
 
             // For each player
@@ -77,12 +79,16 @@ public class Commands {
                 if (p.getName().equals(player))
                     continue;
 
+                // Ensure receiving player is in the same world as the speaking player
+                if (!p.getLocation().getWorld().getName().equals(SpeakersWorld))
+                    continue;
+
                 // If this player knows the language,
                 if (pMgr.PlayerKnowsLanguage(p.getName(), CurrentLanguage)) {
                     // They see the unmunged message
                     p.sendMessage(outUnmunged);
                 } else {
-                    // Otherwise they're clueless to what was said.
+                    // Otherwise they're (typically) clueless to what was said.
                     p.sendMessage(outMunged);
 
                     // However, check to see if this language can be passively learned
