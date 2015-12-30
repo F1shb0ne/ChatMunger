@@ -36,7 +36,7 @@ public class LanguageManager {
 
                     // Then get the language settings
                     yml = YamlConfiguration.loadConfiguration(new File(url + "/config.yml"));
-                    settings = new LanguageSettings(yml.getInt("RequiredSkillPoints"), (long)yml.getInt("ExchangeCooldown"), yml.getInt("RequiredExposures"), yml.getBoolean("PassiveLearning"));
+                    settings = new LanguageSettings(yml.getInt("SkillPointsRequired"), (long)yml.getInt("SkillPointCooldown"), yml.getInt("PassiveExposuresRequired"), yml.getBoolean("PassiveLearning"));
 
                     // Insert the language into the tree
                     tree.put(entry, new Language(vocab, settings));

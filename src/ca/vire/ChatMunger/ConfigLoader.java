@@ -18,7 +18,7 @@ public class ConfigLoader {
         // First determine if plugin data folder exists
         if (DataFolderExists(plugin)) {
 
-            settings.Enable = plugin.getConfig().getBoolean("enable");
+            settings.Enable = plugin.getConfig().getBoolean("Enabled");
             if (!settings.Enable)
                 plugin.getLogger().info("The plugin is NOT enabled.");
 
