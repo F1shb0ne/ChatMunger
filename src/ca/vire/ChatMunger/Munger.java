@@ -10,9 +10,10 @@ public class Munger {
         String word = "";
 
         // Go through the string and piece together words from sequential letters
+        // Include escape char: `
         for (char c: msg.toCharArray()) {
             ++index;
-            if (((int)c >= 97 && (int)c <= 122) || ((int)c >= 65 && (int)c <= 91)) {
+            if (((int)c >= 97 && (int)c <= 122) || ((int)c >= 65 && (int)c <= 91) || (int)c == 96) {
                 // We have a letter; build the word.
                 word += c;
 
@@ -43,8 +44,11 @@ public class Munger {
         boolean capitalize = isCapitalized(word);
         boolean AllCaps = false;
 
-         if (word.length() > 1)
-             AllCaps = isAllCaps(word);
+        if (isEscaped(word))
+            return getEscapedWord(word);
+
+        if (word.length() > 1)
+            AllCaps = isAllCaps(word);
 
         if (v.MappedWordExists(word)) {
             result = result + v.GetMappedWord(word);
@@ -58,6 +62,17 @@ public class Munger {
             result = Capitalize(result);
 
         return result;
+    }
+
+
+    private static boolean isEscaped(String word) {
+        if (word.charAt(0) == 96)
+            return true;
+        return false;
+    }
+
+    private static String getEscapedWord(String word) {
+        return word.substring(1);
     }
 
     private static boolean isCapitalized(String word) {
