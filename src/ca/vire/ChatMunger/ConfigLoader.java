@@ -22,6 +22,11 @@ public class ConfigLoader {
             if (!settings.Enable)
                 plugin.getLogger().info("The plugin is NOT enabled.");
 
+            // Load the perceived volume distance values
+            settings.DistanceWhisper = plugin.getConfig().getInt("DistanceWhisper");
+            settings.DistanceSpeak = plugin.getConfig().getInt("DistanceSpeak");
+            settings.DistanceShout = plugin.getConfig().getInt("DistanceShout");
+
         } else {
             CreateSkeletonDataFolder(plugin);
         }

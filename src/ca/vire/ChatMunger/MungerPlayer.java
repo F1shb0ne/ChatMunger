@@ -13,10 +13,12 @@ public class MungerPlayer {
     public long LastExchange; // Time in seconds since using /teachlang or /acceptlang commands
     public String OfferingPlayer;  // Last person who sent a /teachlang offer
     public String OfferedLanguage; // And which language was offered
+    public double Volume; // Distance of how far player can be heard
 
     public MungerPlayer() {
         LangKnowledge = new HashMap<String, LanguageProperties>();
         CurrentLanguage = "Common";
+        Volume = 0;
     }
     
     // Return number of languages the player has had any teaching in

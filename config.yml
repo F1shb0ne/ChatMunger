@@ -1,5 +1,9 @@
 # General configuration
 
-enable: true
+Enabled: true
 debug: false
+
+DistanceWhisper: 3
+DistanceSpeak: 20
+DistanceShout: 40
 

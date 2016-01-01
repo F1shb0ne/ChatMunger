@@ -20,9 +20,13 @@ public class PlayerManager {
     // Back reference to plugin
     JavaPlugin plugin;
 
-    public PlayerManager(JavaPlugin plugin) {
-        PlayerMap = new HashMap<String, MungerPlayer>();
-        this.plugin = plugin;
+    // Plugin settings
+    Settings LocalSettings;
+
+    public PlayerManager(Plugin pluginref, Settings settings) {
+        this.PlayerMap = new HashMap<String, MungerPlayer>();
+        this.plugin = pluginref;
+        this.LocalSettings = settings;
     }
 
     // Do we have existing data on the player in memory?
@@ -101,6 +105,7 @@ public class PlayerManager {
         if (!PlayerMap.containsKey(player)) {
             // Create new player data object in memory
             PlayerMap.put(player, new MungerPlayer());
+            PlayerMap.get(player).Volume = LocalSettings.DistanceSpeak; // Set default speaking volume
         }
 
         if (PlayerFile.exists()) {
@@ -197,6 +202,10 @@ public class PlayerManager {
         PlayerMap.get(player).CurrentLanguage = language;
     }
 
+    public double GetSpeakingVolume(String player)
+    {
+        return PlayerMap.get(player).Volume;
+    }
     public boolean PlayerKnowsLanguage(String player, String language) {
 
         // Load / create player data if not already in memory

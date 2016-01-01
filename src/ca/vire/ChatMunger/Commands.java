@@ -2,6 +2,7 @@ package ca.vire.ChatMunger;
 
 import java.util.HashMap;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,13 +38,16 @@ public class Commands {
     }
 
 
-    public static void Speak(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String message) {
+    public static void Speak(JavaPlugin plugin, Settings LocalSettings, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String message) {
         String player = sender.getName();
         String MungedMessage;
         String header_known, header_unknown, outMunged, outUnmunged;
         String SpeakersWorld = sender.getServer().getPlayer(player).getLocation().getWorld().getName();
         String PlayersWorld;
+        Location SpeakersLocation = sender.getServer().getPlayer(player).getLocation();
         boolean SkillPointGain = false;
+        double distance;
+        double SpeakingVolume;
 
         String CurrentLanguage = pMgr.GetPlayerCurrentLanguage(player);
 
@@ -81,6 +85,12 @@ public class Commands {
 
                 // Ensure receiving player is in the same world as the speaking player
                 if (!p.getLocation().getWorld().getName().equals(SpeakersWorld))
+                    continue;
+
+                // Distance check against current speaking volume
+                distance = p.getLocation().distance(SpeakersLocation);
+                SpeakingVolume = pMgr.GetSpeakingVolume(player);
+                if (distance > SpeakingVolume)
                     continue;
 
                 // If this player knows the language,
