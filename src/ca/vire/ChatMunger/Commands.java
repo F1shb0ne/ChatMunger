@@ -53,9 +53,9 @@ public class Commands {
 
         if (CurrentLanguage.equals("Common"))
             if (pMgr.NumLanguagesKnown(player) == 0) {
-                sender.sendMessage(ChatColor.DARK_RED + "You don't know any other languages.");
+                sender.sendMessage(ChatColor.RED + "You don't know any other languages.");
             } else {
-                sender.sendMessage(ChatColor.DARK_RED + "You haven't selected a language yet.");
+                sender.sendMessage(ChatColor.RED + "You haven't selected a language yet.");
             }
 
         else {
@@ -68,7 +68,7 @@ public class Commands {
 
             header_unknown = player + ": ";
             header_unknown += "" + ChatColor.WHITE + ChatColor.ITALIC + "[";
-            header_unknown += "" + ChatColor.DARK_RED + ChatColor.ITALIC + CurrentLanguage;
+            header_unknown += "" + ChatColor.RED + ChatColor.ITALIC + CurrentLanguage;
             header_unknown += "" + ChatColor.WHITE + ChatColor.ITALIC + "] ";
 
             outMunged = header_unknown + ChatColor.AQUA + MungedMessage;
@@ -131,7 +131,7 @@ public class Commands {
         }
 
         if (!found) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "Unknown language.");
+            sender.sendMessage("" + ChatColor.RED + "Unknown language.");
             return;
         }
 
@@ -140,48 +140,64 @@ public class Commands {
             pMgr.SetPlayerCurrentLanguage(player, SelectedLanguage);
             sender.sendMessage("" + ChatColor.YELLOW + "Switched to " + SelectedLanguage);
         } else {
-            sender.sendMessage("" + ChatColor.DARK_RED + "You are unable to speak " + SelectedLanguage);
+            sender.sendMessage("" + ChatColor.RED + "You are unable to speak " + SelectedLanguage);
         }
     }
 
-    public static void TeachLang(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String player, String language) {
-        String TeachingPlayer = sender.getName();
-        String TargetPlayer;
+    public static void TeachLang(JavaPlugin plugin, Settings LocalSettings, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String player, String language) {
+        String TeachingPlayer, TargetPlayer;
         String SelectedLanguage = "Invalid";
         String Request;
-        long CurrentTime = (System.currentTimeMillis() / 1000l);
-        long LastExchange;
-        long CooldownTime;
+        String TeachersWorld, TargetsWorld;
+        Player TeachingPlayerEntity, TargetPlayerEntity;
+        Location TeachersLocation, TargetsLocation;
+        long CurrentTime;
+        long LastExchange, CooldownTime;
+        double TeachingVolume, distance;
 
         // Find a language match
         if ((SelectedLanguage = LanguageExists(tree, language)) == null) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "Unknown language.");
+            sender.sendMessage("" + ChatColor.RED + "Unknown language.");
             return;
         }
 
         // Is the teaching player actually able to teach the language?
+        TeachingPlayer = sender.getName();
         if (!pMgr.PlayerKnowsLanguage(TeachingPlayer, SelectedLanguage)) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "You cant teach a language you dont know!");
+            sender.sendMessage("" + ChatColor.RED + "You cant teach a language you dont know!");
             return;
         }
 
         // Get the cooldown time for the language
+        CurrentTime = (System.currentTimeMillis() / 1000l);
         CooldownTime = tree.get(SelectedLanguage).Settings.ExchangeCoolDown;
         LastExchange = pMgr.GetLastExchangeTime(TeachingPlayer);
         if (LastExchange + CooldownTime > CurrentTime) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "It is too soon to teach another skill point");
+            sender.sendMessage("" + ChatColor.RED + "It is too soon to teach another skill point");
             return;
         }
 
         // Find a player match
         if ((TargetPlayer = PlayerOnline(plugin, player)) == null) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "Player not found.");
+            sender.sendMessage("" + ChatColor.RED + "Player not found.");
             return;
         }
 
-        // Does the receiving player already know the language?
-        if (pMgr.PlayerKnowsLanguage(TargetPlayer, SelectedLanguage)) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "That player already knows this language.");
+        // Ensure receiving player is in the same world as the speaking player
+        TeachersWorld = sender.getServer().getPlayer(TeachingPlayer).getLocation().getWorld().getName();
+        TargetsWorld = sender.getServer().getPlayer(TargetPlayer).getLocation().getWorld().getName();
+        if (!TargetsWorld.equals(TeachersWorld)) {
+            sender.sendMessage("" + ChatColor.RED + "That player is in a different world.");
+            return;
+        }
+
+        // Teaching should take place within close proximity.
+        TeachersLocation = sender.getServer().getPlayer(TargetPlayer).getLocation();
+        TargetsLocation = sender.getServer().getPlayer(TeachingPlayer).getLocation();
+        TeachingVolume = (double)LocalSettings.DistanceWhisper;
+        distance = TeachersLocation.distance(TargetsLocation);
+        if (distance > TeachingVolume) {
+            sender.sendMessage("" + ChatColor.RED + "You are too far away from that player to teach.");
             return;
         }
 
@@ -216,7 +232,7 @@ public class Commands {
         }
 
         if (!found) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "Unknown language.");
+            sender.sendMessage("" + ChatColor.RED + "Unknown language.");
             return;
         }
 
@@ -250,6 +266,57 @@ public class Commands {
             pRef.sendMessage("" + ChatColor.YELLOW + "You now understand the " + SelectedLanguage + " language!");
     }
 
+    // Intended for administrators
+    public static void RemoveLang(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String player, String language) {
+        boolean found = false;
+        String SelectedLanguage = "Invalid";
+        String TargetPlayer = "Invalid";
+        Player pRef = null;
+
+        // Find a language match
+        for (String lang: tree.keySet()) {
+            if (lang.equalsIgnoreCase(language.toLowerCase())) {
+                found = true;
+                SelectedLanguage = lang;
+                break;
+            }
+        }
+
+        if (!found) {
+            sender.sendMessage("" + ChatColor.RED + "Unknown language.");
+            return;
+        }
+
+        // re-use 'found' for player next
+        found = false;
+
+        // Check if the player is online
+        for (Player p: plugin.getServer().getOnlinePlayers()) {
+            if (p.getName().equalsIgnoreCase(player)) {
+                found = true;
+                TargetPlayer = p.getName();
+                pRef = p;
+                break;
+            }
+        }
+
+        if (!found) {
+            // Player is not online, so lets hope the spelling/case usage was correct
+            TargetPlayer = player;
+        }
+
+        pMgr.RemovePlayerLanguage(TargetPlayer, SelectedLanguage);
+
+        if (sender.getName().contentEquals("CONSOLE"))
+            plugin.getLogger().info("Removing " + SelectedLanguage + " from " + TargetPlayer);
+        else
+            sender.sendMessage("" + ChatColor.YELLOW + "Removing " + SelectedLanguage + " from " + TargetPlayer);
+
+        // Inform the player if they are online
+        if (pRef != null)
+            pRef.sendMessage("" + ChatColor.YELLOW + "Your understanding of " + SelectedLanguage + " has vanished.");
+    }
+
     public static void LangInfo(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String language) {
         boolean found = false;
         String SelectedLanguage = "Invalid";
@@ -266,7 +333,7 @@ public class Commands {
                 if (pMgr.PlayerKnowsLanguage(player, lang))
                     ServerLanguages += "" + ChatColor.BLUE + lang + " ";
                 else
-                    ServerLanguages += "" + ChatColor.DARK_RED + lang + " ";
+                    ServerLanguages += "" + ChatColor.RED + lang + " ";
             }
             ServerLanguages = ServerLanguages.trim();
             sender.sendMessage("Server languages: " + ServerLanguages);
@@ -283,7 +350,7 @@ public class Commands {
             }
 
             if (!found) {
-                sender.sendMessage("" + ChatColor.DARK_RED + "Unknown language.");
+                sender.sendMessage("" + ChatColor.RED + "Unknown language.");
                 return;
             }
 
@@ -292,7 +359,7 @@ public class Commands {
             } else {
                 SkillPoints = pMgr.GetLanguageSkillPoints(player, SelectedLanguage);
                 if (SkillPoints == 0) {
-                    sender.sendMessage("" + ChatColor.DARK_RED + "You do not understand this language.");
+                    sender.sendMessage("" + ChatColor.RED + "You do not understand this language.");
                 } else {
                     ReqSkillPoints = pMgr.GetLanguageReqSkillPoints(player, SelectedLanguage);
                     msg = "" + ChatColor.YELLOW + "You have " + ChatColor.YELLOW + "" + new Integer(SkillPoints).toString();
@@ -305,75 +372,87 @@ public class Commands {
 
     }
 
-    public static void AcceptLang(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender) {
-        String ReceivingPlayer = sender.getName();
-        String TeachingPlayer = null;
-        String OfferedLanguage = null;
+    public static void AcceptLang(JavaPlugin plugin, Settings LocalSettings, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender) {
+        String TeachingPlayer, TargetPlayer;
+        String SelectedLanguage;
+        String TeachersWorld, TargetsWorld;
+        Player TeachingPlayerEntity, TargetPlayerEntity;
+        Location TeachersLocation, TargetsLocation;
+        long CurrentTime;
+        long LastExchange, CooldownTime;
+        double TeachingVolume, distance;
 
-        long LastExchangeTeacher = 0;
-        long LastExchangeReceiver = 0;
-        long CurrentTime = (System.currentTimeMillis() / 1000l);
-        long CooldownTime = 0;
+        // Check to see if a /teachlang offer was made to the commanding player
+        TargetPlayer = sender.getName();
+        TeachingPlayer = pMgr.GetOfferingPlayer(TargetPlayer);
+        if (TeachingPlayer == null) {
+            sender.sendMessage("" + ChatColor.RED + "You have not been offered a skill point.");
+            return;
+        }
 
-        Player pReceiver;
-        Player pTeacher;
+        // Next get the language that was offered
+        SelectedLanguage = pMgr.GetOfferedLanguage(TargetPlayer);
 
-        // First check to see if a /teachlang offer was made to the commanding player
-        if ((TeachingPlayer = pMgr.GetOfferingPlayer(ReceivingPlayer)) == null) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "You have not been offered a skill point yet.");
+        // Check if the target player already knows this language
+        if (pMgr.PlayerKnowsLanguage(TargetPlayer, SelectedLanguage)) {
+            sender.sendMessage("" + ChatColor.RED + "You already know this language!");
+            pMgr.ClearOfferingPlayer(TargetPlayer);
+            return;
+        }
+
+        // Get the cool-down time for the language
+        CurrentTime = (System.currentTimeMillis() / 1000l);
+        CooldownTime = tree.get(SelectedLanguage).Settings.ExchangeCoolDown;
+        LastExchange = pMgr.GetLastExchangeTime(TeachingPlayer);
+        if (LastExchange + CooldownTime > CurrentTime) {
+            sender.sendMessage("" + ChatColor.RED + "It is too soon to receive another skill point");
             return;
         }
 
         // Make sure the teaching player is still online
         if (PlayerOnline(plugin, TeachingPlayer) == null) {
-            sender.sendMessage("" + ChatColor.DARK_RED + "That player is not currently online.");
+            sender.sendMessage("" + ChatColor.RED + "That player does not appear to be online anymore.");
             return;
         }
 
-        // Get the language that was offered
-        OfferedLanguage = pMgr.GetOfferedLanguage(ReceivingPlayer);
-
-        // Determine the last time both players made a skill point exchange
-        LastExchangeTeacher = pMgr.GetLastExchangeTime(TeachingPlayer);
-        LastExchangeReceiver = pMgr.GetLastExchangeTime(ReceivingPlayer);
-
-        // Get the cooldown time for the language
-        CooldownTime = tree.get(OfferedLanguage).Settings.ExchangeCoolDown;
-
-        // Simplify some code...
-        pReceiver = plugin.getServer().getPlayer(ReceivingPlayer);
-        pTeacher = plugin.getServer().getPlayer(TeachingPlayer);
-
-        // Make sure enough time has elapsed for both teacher and student
-        if (LastExchangeReceiver + CooldownTime > CurrentTime) {
-            pReceiver.sendMessage("" + ChatColor.DARK_RED + "It is too soon to receive a skill point");
-            pTeacher.sendMessage("" + ChatColor.DARK_RED + "It is too soon for that player to receive a skill point");
+        // Make sure they're both in the same world
+        TeachersWorld = sender.getServer().getPlayer(TeachingPlayer).getLocation().getWorld().getName();
+        TargetsWorld = sender.getServer().getPlayer(TargetPlayer).getLocation().getWorld().getName();
+        if (!TargetsWorld.equals(TeachersWorld)) {
+            sender.sendMessage("" + ChatColor.RED + "That player is in a different world now.");
             return;
         }
-        if (LastExchangeTeacher + CooldownTime > CurrentTime) {
-            pReceiver.sendMessage("" + ChatColor.DARK_RED + "It is too soon for that player to teach a skill point");
-            pTeacher.sendMessage("" + ChatColor.DARK_RED + "It is too soon to teach another skill point");
+
+        // Teaching should take place within close proximity.
+        TeachersLocation = sender.getServer().getPlayer(TeachingPlayer).getLocation();
+        TargetsLocation = sender.getServer().getPlayer(TargetPlayer).getLocation();
+        TeachingVolume = (double)LocalSettings.DistanceWhisper;
+        distance = TeachersLocation.distance(TargetsLocation);
+        if (distance > TeachingVolume) {
+            sender.sendMessage("" + ChatColor.RED + "You are too far away from the teaching player.");
             return;
         }
 
         // Grant the skill point
-        pMgr.AddSkillPoint(ReceivingPlayer, OfferedLanguage, 1);
+        pMgr.AddSkillPoint(TargetPlayer, SelectedLanguage, 1);
 
-        // Update the timestamps
+        // Update the time stamps
         pMgr.SetLastExchangeTime(TeachingPlayer, CurrentTime);
-        pMgr.SetLastExchangeTime(ReceivingPlayer, CurrentTime);
+        pMgr.SetLastExchangeTime(TargetPlayer, CurrentTime);
 
         // Inform players of the successful exchange
-        if (pMgr.PlayerKnowsLanguage(ReceivingPlayer, OfferedLanguage)) {
-            // Only tell the receiving player he or she has fluency now; they might want to keep that information private
-            pReceiver.sendMessage("" + ChatColor.WHITE + "You now know the " + ChatColor.BLUE + OfferedLanguage + ChatColor.WHITE + " language!");
+        TeachingPlayerEntity = sender.getServer().getPlayer(TeachingPlayer).getPlayer();
+        TargetPlayerEntity = sender.getServer().getPlayer(TargetPlayer).getPlayer();
+        if (pMgr.PlayerKnowsLanguage(TargetPlayer, SelectedLanguage)) {
+            // Only tell the target player he or she has fluency now; they might wish to keep that information private
+            TargetPlayerEntity.sendMessage("" + ChatColor.WHITE + "You now know the " + ChatColor.BLUE + SelectedLanguage + ChatColor.WHITE + " language!");
         } else {
-            pReceiver.sendMessage("" + ChatColor.WHITE + "You have received a skill point in " + ChatColor.BLUE + OfferedLanguage + ChatColor.WHITE + "!");
+            TargetPlayerEntity.sendMessage("" + ChatColor.WHITE + "You have received a skill point in " + ChatColor.BLUE + SelectedLanguage + ChatColor.WHITE + "!");
         }
 
-        pTeacher.sendMessage("" + ChatColor.WHITE + "You have taught a skill point in " + ChatColor.BLUE + OfferedLanguage + ChatColor.WHITE + "!");
+        TeachingPlayerEntity.sendMessage("" + ChatColor.WHITE + "You have taught a skill point in " + ChatColor.BLUE + SelectedLanguage + ChatColor.WHITE + "!");
 
-        // Finally, clear the otffering player
-        pMgr.ClearOfferingPlayer(ReceivingPlayer);
+        // Finally, clear the offering player
+        pMgr.ClearOfferingPlayer(TargetPlayer);
     }
 }

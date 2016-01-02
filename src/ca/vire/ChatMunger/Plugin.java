@@ -87,7 +87,7 @@ public final class Plugin extends JavaPlugin {
                 return true;
             }
             if (args.length == 2) {
-                Commands.TeachLang(this, PlayerMgr, LanguageTree, sender, args[0], args[1]);
+                Commands.TeachLang(this, LocalSettings, PlayerMgr, LanguageTree, sender, args[0], args[1]);
             } else {
                 sender.sendMessage(ChatColor.DARK_RED + "Usage: /teachlang <player> <language>");
             }
@@ -101,7 +101,7 @@ public final class Plugin extends JavaPlugin {
             }
 
             if (args.length == 0) {
-                Commands.AcceptLang(this, PlayerMgr, LanguageTree, sender);
+                Commands.AcceptLang(this, LocalSettings, PlayerMgr, LanguageTree, sender);
             } else {
                 sender.sendMessage(ChatColor.DARK_RED + "Usage: /acceptlang");
             }
@@ -114,6 +114,16 @@ public final class Plugin extends JavaPlugin {
                 Commands.GiveLang(this, PlayerMgr, LanguageTree, sender, args[0], args[1]);
             } else {
                 sender.sendMessage(ChatColor.DARK_RED + "Usage: /givelang <player> <language>");
+            }
+
+            return true;
+        }
+
+        if (cmd.getName().equalsIgnoreCase("removelang")) {
+            if (args.length == 2) {
+                Commands.RemoveLang(this, PlayerMgr, LanguageTree, sender, args[0], args[1]);
+            } else {
+                sender.sendMessage(ChatColor.DARK_RED + "Usage: /removelang <player> <language>");
             }
 
             return true;

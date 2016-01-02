@@ -88,6 +88,22 @@ public class PlayerManager {
         PlayerMap.get(player).LangKnowledge.put(language, new LanguageProperties(CurrentSkillPoints, RequiredSkillPoints, CurrentExposures, RequiredExposures, PassiveLearning));
     }
 
+    // Returns true if language removed, false if language never existed.
+    public boolean RemovePlayerLanguage(String player, String language) {
+        // Load / create player data
+        if (!PlayerExists(player))
+            LoadPlayerData(player);
+
+        // Check if player has any skill points in the language
+        if (GetLanguageSkillPoints(player, language) == 0)
+            return false; // player is effectively ignorant of language; bail
+
+        // Is either fluent or has some knowledge: set skill points to zero
+        PlayerMap.get(player).LangKnowledge.get(language).CurrentSkillPoints = 0;
+
+        return true;
+    }
+
     // Loads player language information from plugin data folder
     // We're here because player data doesn't exist in memory, but might on disk
     private boolean LoadPlayerData(String player) {

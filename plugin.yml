@@ -28,6 +28,11 @@ commands:
       usage: /givelang
       permission: ChatMunger.givelang
       permission-message: §4You are not allowed to do that.
+   removelang:
+      description: Removes a language from a player.
+      usage: /removelang
+      permission: ChatMunger.removelang
+      permission-message: §4You are not allowed to do that.
    langinfo:
       description: Gives information about languages and what the player knows.
       usage: /langinfo
