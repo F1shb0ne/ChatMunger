@@ -1,5 +1,6 @@
 package ca.vire.ChatMunger;
 
+// Global settings for plugin and players.
 public class Settings {
 
     boolean Enable = false;

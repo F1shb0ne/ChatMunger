@@ -457,6 +457,9 @@ public class Commands {
     }
 
     public static void LangMenu(JavaPlugin plugin, Settings LocalSettings, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender) {
-
+        if (sender.getName().contentEquals("CONSOLE"))
+            plugin.getLogger().info("Not yet implemented. (You wouldnt use this from the console anyway)");
+        else
+            sender.sendMessage("" + ChatColor.RED + "Not yet implemented.");
     }
 }

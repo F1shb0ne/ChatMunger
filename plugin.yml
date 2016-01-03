@@ -23,6 +23,11 @@ commands:
       usage: /acceptlang
       permission: ChatMunger.acceptlang
       permission-message: §4You are not able to accept munged language teachings.
+   langmenu:
+      description: Choose starter languages
+      usage: /langmenu
+      permission: ChatMunger.langmenu
+      permission-message: §4You are not able to select starter languages.
    givelang:
       description: Instantly gives a player use of a language
       usage: /givelang

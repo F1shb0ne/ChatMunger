@@ -62,8 +62,8 @@ public class ConfigLoader {
         ExampleConfigContents += "# Number of skill points required to learn this language\n";
         ExampleConfigContents += "SkillPointsRequired: 8\n";
         ExampleConfigContents += "\n";
-        ExampleConfigContents += "# Minimum amount of time (in hours) that must elapse before another skill may be taught.\n";
-        ExampleConfigContents += "SkillPointCooldown: 24\n";
+        ExampleConfigContents += "# Minimum amount of time (in seconds) that must elapse before another skill may be taught.\n";
+        ExampleConfigContents += "SkillPointCooldown: 86400\n";
         ExampleConfigContents += "\n";
         ExampleConfigContents += "# Can players gain skill points over time just by 'hearing' others use it?\n";
         ExampleConfigContents += "PassiveLearning: true\n";
@@ -71,11 +71,9 @@ public class ConfigLoader {
         ExampleConfigContents += "# If so, how many instances of players using /speak be required to advance one skill point?\n";
         ExampleConfigContents += "PassiveExposuresRequired: 100\n";
         ExampleConfigContents += "\n";
-        ExampleConfigContents += "# Is this a starter language?\n";
-        ExampleConfigContents += "StarterLanguage: true\n";
-        ExampleConfigContents += "\n";
-        ExampleConfigContents += "# If so, how many language points does it cost?\n";
-        ExampleConfigContents += "LanguagePoints: 1\n";
+        ExampleConfigContents += "# Can a player start with this language from /langmenu ? If so, how many language points will it cost?\n";
+        ExampleConfigContents += "# Set to 0 to exclude from /langmenu.\n";
+        ExampleConfigContents += "StarterLanguagePoints: 1\n";
         ExampleConfigContents += "\n";
 
         ExampleWordsContents += "# Example words file.\n";

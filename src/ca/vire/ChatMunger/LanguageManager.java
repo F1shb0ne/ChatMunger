@@ -14,10 +14,8 @@ public class LanguageManager {
         File file;
         String path = plugin.getDataFolder().getAbsolutePath();
         String url;
-        String langlist = "";
         String info;
         FileConfiguration yml;
-
         Vocabulary vocab;
         LanguageSettings settings;
 
@@ -36,15 +34,19 @@ public class LanguageManager {
 
                     // Then get the language settings
                     yml = YamlConfiguration.loadConfiguration(new File(url + "/config.yml"));
-                    settings = new LanguageSettings(yml.getInt("SkillPointsRequired"), (long)yml.getInt("SkillPointCooldown"), yml.getInt("PassiveExposuresRequired"), yml.getBoolean("PassiveLearning"));
+                    settings = new LanguageSettings(yml.getInt("SkillPointsRequired"), (long)yml.getInt("SkillPointCooldown"), yml.getInt("PassiveExposuresRequired"), yml.getBoolean("PassiveLearning"), yml.getInt("StarterLanguagePoints"));
 
                     // Insert the language into the tree
                     tree.put(entry, new Language(vocab, settings));
-                    langlist += entry + " ";
 
                     // Give some statistics
                     info = entry + ": " + new Integer(vocab.GetDictionarySize()) + " words, ";
-                    info += "" + new Integer(vocab.GetWordmapSize()) + " word mappings.";
+                    info += "" + new Integer(vocab.GetWordmapSize()) + " mappings. ";
+                    info += "Starter language: ";
+                    if (settings.StarterLanguagePoints == 0)
+                        info += "False.";
+                    else
+                        info += "" + new Integer(settings.StarterLanguagePoints).toString() + " language points.";
                     plugin.getLogger().info(info);
                 }
             }

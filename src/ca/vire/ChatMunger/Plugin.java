@@ -33,8 +33,6 @@ public final class Plugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info("Shutting down.");
-
         PlayerMgr.SavePlayerData();
     }
 
