@@ -57,10 +57,13 @@ To start using a language, the player types /lang <language>, and then may use /
 * ChatMunger.teachlang
 * ChatMunger.acceptlang
 * ChatMunger.givelang
+* ChatMunger.removelang
 * ChatMunger.langreload
 
 == Planned Features ==
 
+* Starter Language Points: Players will have a /langmenu command to spend these language points on languages marked with a special flag to start off with.
+* Three configurable speaking volumes: whisper, normal and shout. (Currently hard-coded to use normal speaking volume)
 * User Language creation, possible donor feature & EULA Compliant!
 * With the right requirements, players might wish to create their own languages.  Imposing appropriate cooldowns with commands like /createlang, /addword, /addwordmap could potentially lead to some interesting player content creation.  Careful planning will be required.
 

@@ -1,11 +1,16 @@
-1.0.0
-Initial release
+1.3.0
+Fixed example language template (Unless server owners figured it out the source, plugin was unusable... sorry D: )
+Added /removelang
+Players must be in same world and proximity to use /speak and teaching commands (commands to change speaking 'volume' will be added next release)
 
-1.0.1
-Added /langreload
+1.2.0
+Added passive language learning aspect for languages
 
 1.1.0
 Added /teachlang, /acceptlang
 
-1.2.0
-Added passive language learning aspect for languages
+1.0.1
+Added /langreload
+
+1.0.0
+Initial release
