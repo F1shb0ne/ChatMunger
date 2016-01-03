@@ -90,16 +90,20 @@ public class PlayerManager {
 
     // Returns true if language removed, false if language never existed.
     public boolean RemovePlayerLanguage(String player, String language) {
-        // Load / create player data
-        if (!PlayerExists(player))
+        // Load / create player data, then bail.
+        if (!PlayerExists(player)) {
             LoadPlayerData(player);
+            return false;
+        }
 
-        // Check if player has any skill points in the language
-        if (GetLanguageSkillPoints(player, language) == 0)
-            return false; // player is effectively ignorant of language; bail
+        if (PlayerMap.get(player).LangKnowledge.containsKey(language)) {
+            // Remove LanguageProperties object for specific language.
+            PlayerMap.get(player).LangKnowledge.remove(language);
 
-        // Is either fluent or has some knowledge: set skill points to zero
-        PlayerMap.get(player).LangKnowledge.get(language).CurrentSkillPoints = 0;
+            // Reset currently used language to Common; nothing.
+            PlayerMap.get(player).CurrentLanguage = "Common";
+        } else
+            return false;
 
         return true;
     }
