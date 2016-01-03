@@ -455,4 +455,8 @@ public class Commands {
         // Finally, clear the offering player
         pMgr.ClearOfferingPlayer(TargetPlayer);
     }
+
+    public static void LangMenu(JavaPlugin plugin, Settings LocalSettings, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender) {
+
+    }
 }

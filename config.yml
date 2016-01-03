@@ -3,7 +3,9 @@
 Enabled: true
 debug: false
 
-DistanceWhisper: 3
+DistanceWhisper: 2
 DistanceSpeak: 20
-DistanceShout: 40
+DistanceShout: 50
+
+StarterLanguagePoints: 5
 

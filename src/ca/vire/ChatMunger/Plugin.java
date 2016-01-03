@@ -109,6 +109,16 @@ public final class Plugin extends JavaPlugin {
             return true;
         }
 
+        if (cmd.getName().equalsIgnoreCase("langmenu")) {
+            if (args.length == 0) {
+                Commands.LangMenu(this, LocalSettings, PlayerMgr, LanguageTree, sender);
+            } else {
+                sender.sendMessage(ChatColor.DARK_RED + "Usage: /langmenu");
+            }
+
+            return true;
+        }
+
         if (cmd.getName().equalsIgnoreCase("givelang")) {
             if (args.length == 2) {
                 Commands.GiveLang(this, PlayerMgr, LanguageTree, sender, args[0], args[1]);

@@ -7,11 +7,13 @@ public class LanguageSettings {
     public long ExchangeCoolDown;
     public int RequiredExposures;
     public boolean PassiveLearning;
-    
-    LanguageSettings(int requiredpoints, long cooldown, int requiredexposures, boolean passivelearning) {
+    public boolean StarterLanguage;
+
+    LanguageSettings(int requiredpoints, long cooldown, int requiredexposures, boolean passivelearning, boolean starterlanguage) {
         RequiredSkillPoints = requiredpoints;
         ExchangeCoolDown = cooldown;
         RequiredExposures = requiredexposures;
         PassiveLearning = passivelearning;
+        StarterLanguage = starterlanguage;
     }
 }

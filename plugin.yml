@@ -1,5 +1,5 @@
 name: ChatMunger
-version: 1.2.0
+version: 1.3.0
 author: F1shb0ne
 main: ca.vire.ChatMunger.Plugin
 commands:

@@ -70,6 +70,13 @@ public class ConfigLoader {
         ExampleConfigContents += "\n";
         ExampleConfigContents += "# If so, how many instances of players using /speak be required to advance one skill point?\n";
         ExampleConfigContents += "PassiveExposuresRequired: 100\n";
+        ExampleConfigContents += "\n";
+        ExampleConfigContents += "# Is this a starter language?\n";
+        ExampleConfigContents += "StarterLanguage: true\n";
+        ExampleConfigContents += "\n";
+        ExampleConfigContents += "# If so, how many language points does it cost?\n";
+        ExampleConfigContents += "LanguagePoints: 1\n";
+        ExampleConfigContents += "\n";
 
         ExampleWordsContents += "# Example words file.\n";
         ExampleWordsContents += "# See Documentation.txt for more details at: https://github.com/F1shb0ne/ChatMunger\n";
