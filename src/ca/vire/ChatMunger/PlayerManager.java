@@ -291,16 +291,15 @@ public class PlayerManager {
         return result;
     }
 
-    public boolean SetOfferingPlayer(String ReceivingPlayer, String TeachingPlayer, String Language) {
-        boolean result = false;
+    public void SetOfferingPlayer(String ReceivingPlayer, String TeachingPlayer, String Language) {
 
-        if (PlayerMap.containsKey(ReceivingPlayer)) {
-            PlayerMap.get(ReceivingPlayer).OfferingPlayer = TeachingPlayer;
-            PlayerMap.get(ReceivingPlayer).OfferedLanguage = Language;
-            result = true;
-        }
+        // Load / create player data if not already in memory
+        if (!PlayerExists(ReceivingPlayer))
+            LoadPlayerData(ReceivingPlayer);
 
-        return result;
+        PlayerMap.get(ReceivingPlayer).OfferingPlayer = TeachingPlayer;
+        PlayerMap.get(ReceivingPlayer).OfferedLanguage = Language;
+
     }
 
     public void ClearOfferingPlayer(String ReceivingPlayer) {
