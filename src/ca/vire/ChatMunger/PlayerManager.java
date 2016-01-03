@@ -52,7 +52,7 @@ public class PlayerManager {
 
         // Dig up the language settings from the plugin data folder
         LanguageData = new YamlConfiguration().loadConfiguration(new File(LangConfigUrl));
-        RequiredSkillPoints = LanguageData.getInt("RequiredSkillPoints");
+        RequiredSkillPoints = LanguageData.getInt("SkillPointsRequired");
         RequiredExposures = LanguageData.getInt("PassiveExposuresRequired");
         PassiveLearning = LanguageData.getBoolean("PassiveLearning");
 
@@ -134,6 +134,7 @@ public class PlayerManager {
 
             // Check if the player knows any languages at all
             if (PlayerData.isConfigurationSection("Languages")) {
+
                 // Languages player knows
                 LangList = PlayerData.getConfigurationSection("Languages").getKeys(false);
                 LangCount = LangList.size();

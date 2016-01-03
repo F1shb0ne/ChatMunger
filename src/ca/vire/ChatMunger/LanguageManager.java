@@ -40,13 +40,16 @@ public class LanguageManager {
                     tree.put(entry, new Language(vocab, settings));
 
                     // Give some statistics
-                    info = entry + ": " + new Integer(vocab.GetDictionarySize()) + " words, ";
+                    info = entry + ": " + new Integer(settings.SkillPointsRequired).toString() + " skill points, ";
+                    info += "" + new Integer(vocab.GetDictionarySize()) + " words, ";
                     info += "" + new Integer(vocab.GetWordmapSize()) + " mappings. ";
                     info += "Starter language: ";
                     if (settings.StarterLanguagePoints == 0)
                         info += "False.";
                     else
                         info += "" + new Integer(settings.StarterLanguagePoints).toString() + " language points.";
+                    if (settings.PassiveLearning)
+                        info += " Passive";
                     plugin.getLogger().info(info);
                 }
             }
@@ -66,7 +69,7 @@ public class LanguageManager {
 
     // Assumes the language exists
     public static int GetRequiredSkillPoints(HashMap<String, Language> tree, String language) {
-        return tree.get(language).Settings.RequiredSkillPoints;
+        return tree.get(language).Settings.SkillPointsRequired;
     }
 
 }

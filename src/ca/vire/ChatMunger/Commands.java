@@ -106,7 +106,7 @@ public class Commands {
                         SkillPointGain = pMgr.AddExposurePoint(p.getName(), CurrentLanguage, 1);
 
                         if (SkillPointGain)
-                            p.sendMessage("" + ChatColor.WHITE + "You have gained a skill point in the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language!");
+                            p.sendMessage("" + ChatColor.WHITE + "You have gained a skill point in the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language from exposure!");
 
                         if (pMgr.PlayerKnowsLanguage(p.getName(), CurrentLanguage))
                             p.sendMessage("" + ChatColor.WHITE + "You now know the " + ChatColor.BLUE + CurrentLanguage + ChatColor.WHITE + " language!");
@@ -170,7 +170,7 @@ public class Commands {
 
         // Get the cooldown time for the language
         CurrentTime = (System.currentTimeMillis() / 1000l);
-        CooldownTime = tree.get(SelectedLanguage).Settings.ExchangeCoolDown;
+        CooldownTime = tree.get(SelectedLanguage).Settings.SkillPointCooldown;
         LastExchange = pMgr.GetLastExchangeTime(TeachingPlayer);
         if (LastExchange + CooldownTime > CurrentTime) {
             sender.sendMessage("" + ChatColor.RED + "It is too soon to teach another skill point");
@@ -218,40 +218,20 @@ public class Commands {
     // Intended for administrators
     public static void GiveLang(JavaPlugin plugin, PlayerManager pMgr, HashMap<String, Language> tree, CommandSender sender, String player, String language) {
         boolean found = false;
-        String SelectedLanguage = "Invalid";
-        String TargetPlayer = "Invalid";
-        Player pRef = null;
+        String SelectedLanguage;
+        String TargetPlayer;
+        Player TargetPlayerEntity;
 
         // Find a language match
-        for (String lang: tree.keySet()) {
-            if (lang.equalsIgnoreCase(language.toLowerCase())) {
-                found = true;
-                SelectedLanguage = lang;
-                break;
-            }
-        }
-
-        if (!found) {
+        if ((SelectedLanguage = LanguageExists(tree, language)) == null) {
             sender.sendMessage("" + ChatColor.RED + "Unknown language.");
             return;
         }
 
-        // re-use 'found' for player next
-        found = false;
-
-        // Check if the player is online
-        for (Player p: plugin.getServer().getOnlinePlayers()) {
-            if (p.getName().equalsIgnoreCase(player)) {
-                found = true;
-                TargetPlayer = p.getName();
-                pRef = p;
-                break;
-            }
-        }
-
-        if (!found) {
-            // Player is not online, so lets hope the spelling/case usage was correct
-            TargetPlayer = player;
+        // Find a player match
+        if ((TargetPlayer = PlayerOnline(plugin, player)) == null) {
+            sender.sendMessage("" + ChatColor.RED + "Player not found.");
+            return;
         }
 
         if (sender.getName().contentEquals("CONSOLE"))
@@ -261,9 +241,9 @@ public class Commands {
 
         pMgr.GivePlayerLanguage(TargetPlayer, SelectedLanguage);
 
-        // Inform the player if they are online
-        if (pRef != null)
-            pRef.sendMessage("" + ChatColor.YELLOW + "You now understand the " + SelectedLanguage + " language!");
+        // Inform the player
+        TargetPlayerEntity = sender.getServer().getPlayer(TargetPlayer);
+        TargetPlayerEntity.sendMessage("" + ChatColor.YELLOW + "You now understand the " + SelectedLanguage + " language!");
     }
 
     // Intended for administrators
@@ -402,7 +382,7 @@ public class Commands {
 
         // Get the cool-down time for the language
         CurrentTime = (System.currentTimeMillis() / 1000l);
-        CooldownTime = tree.get(SelectedLanguage).Settings.ExchangeCoolDown;
+        CooldownTime = tree.get(SelectedLanguage).Settings.SkillPointCooldown;
         LastExchange = pMgr.GetLastExchangeTime(TeachingPlayer);
         if (LastExchange + CooldownTime > CurrentTime) {
             sender.sendMessage("" + ChatColor.RED + "It is too soon to receive another skill point");

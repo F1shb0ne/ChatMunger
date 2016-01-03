@@ -126,6 +126,8 @@ public class ConfigLoader {
             return false;
         }
 
+        plugin.getLogger().info("...done. You should stop the server now and define/import your languages.");
+
         return true;
     }
 
